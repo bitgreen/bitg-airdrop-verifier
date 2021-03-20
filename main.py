@@ -499,7 +499,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
         if os.path.isfile(f"{directory}/bitgreen.conf"):
             os.rename(f"{directory}/bitgreen.conf", f"{directory}/bitgreen-{uuid.uuid4().hex[:6]}.conf")
 
-        if os.path.isfile(f"{directory}/wallet.dat"):
+        if os.path.isfile(f"{directory}/wallet.dat") or os.path.isfile(f"{directory}/wallets/wallet.dat"):
             with open(f"{directory}/bitgreen.conf", "w") as conf:
                 conf.write("""server=1
 rpcbind=127.0.0.1
