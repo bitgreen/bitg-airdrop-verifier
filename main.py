@@ -302,8 +302,7 @@ class WalletData(tk.Frame):
         ## BitGreen - Wallet Data ############
         self.step_title = tk.Label(self, text="BitGreen wallet data", fg='#00A519', bg='white',
                                    font=controller.title_font)
-        self.step = tk.Label(self, text="STEP 1", fg='#00A519', bg='white',
-                             font=controller.title_font_step)
+        self.step = tk.Label(self, text="STEP 1", fg='#00A519', bg='white', font=controller.title_font_step)
         self.step.place(x=270, y=75)
         self.step_title.place(x=270, y=40)
         ######################################
@@ -357,7 +356,7 @@ class WalletData(tk.Frame):
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.next_btn.place(x=630, y=340)
+        self.next_btn.place(x=630, y=330)
 
     def walletdir(self, event):
         # Allow user to select a directory and store it in global var
@@ -380,6 +379,10 @@ class EnableTool(tk.Frame):
         active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
+        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
+        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_logo = ImageTk.PhotoImage(tick_img)
+
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
         dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
         dot_logo = ImageTk.PhotoImage(dot_img)
@@ -387,8 +390,8 @@ class EnableTool(tk.Frame):
         # Inactive
         wallet_data_lbl = tk.Label(self, text="Wallet data", bg='white', font=controller.text_style)
         wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=45)
 
         # Active - # Enable this tool
@@ -445,7 +448,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
         self.create_config_btn = tk.Button(self, text="CREATE CONFIG",
                                            font=controller.text_style_bold,
                                            fg='white',
-                                           command=self.create_config,
+                                           command=lambda : self.create_config(),
                                            width=14,
                                            pady=2,
                                            relief=tk.GROOVE,
@@ -461,7 +464,8 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                     pady=2,
                                     relief=tk.GROOVE,
                                     border=0,
-                                    bg='#00A519')
+                                    bg='#00A519',
+                                    state=tk.DISABLED)
         self.enable_btn.place(x=410, y=200)
 
         self.next_btn = tk.Button(self, text="NEXT",
@@ -474,7 +478,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.next_btn.place(x=630, y=340)
+        self.next_btn.place(x=630, y=330)
 
         self.back_btn = tk.Button(self, text="BACK",
                                   font=controller.text_style_bold,
@@ -486,7 +490,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.back_btn.place(x=270, y=340)
+        self.back_btn.place(x=270, y=330)
 
     def create_config(self):
         directory = self.controller.shared_data["directory"].get()
@@ -508,6 +512,7 @@ rpcuser=SignWithSubstrate
 rpcpassword=SignWithSubstrate""")
                 messagebox.showinfo("Information",
                                     "Bitgreen.conf created!\n\nRestart your wallet if opened already.\nIf not, open your BitGreen wallet before clicking 'ENABLE'.")
+                self.enable_btn["state"] = tk.NORMAL
         else:
             messagebox.showinfo("Error", "Please check you have specified the correct block directory")
 
@@ -533,7 +538,7 @@ class VerifyOwnership(tk.Frame):
         active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
-        icon_wallet_img = Image.open(resourcePath('icons_Folder.jpg'))
+        icon_wallet_img = Image.open(resourcePath('icons_Substrate.jpg'))
         icon_wallet_img = icon_wallet_img.resize((30, 30), Image.ANTIALIAS)
         icon_wallet_logo = ImageTk.PhotoImage(icon_wallet_img)
 
@@ -541,18 +546,22 @@ class VerifyOwnership(tk.Frame):
         dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
+        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
+        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_logo = ImageTk.PhotoImage(tick_img)
+
         # Inactive
         wallet_data_lbl = tk.Label(self, text="Wallet data", bg='white', font=controller.text_style)
         wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=45)
 
         # Inactive
         enable_this_tool_lbl = tk.Label(self, text="Enable this tool", bg='white', font=controller.text_style)
         enable_this_tool_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=110)
 
         # Active - Verify Ownership
@@ -611,11 +620,11 @@ Enter your preferred Substrate address below.""",
         self.substrate_txtfld.bind("<FocusOut>", lambda event, message="Substrate address": handle_focus_out(event,
                                                                                                              "Substrate address",
                                                                                                              self.substrate_txtfld))
-        self.substrate_txtfld.place(x=310, y=290, width=380, height=35)
+        self.substrate_txtfld.place(x=310, y=285, width=380, height=35)
 
         icon_key = tk.Label(self, image=icon_wallet_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_wallet_logo
-        icon_key.place(x=270, y=290)
+        icon_key.place(x=270, y=286)
 
         self.next_btn = tk.Button(self, text="NEXT",
                                   font=controller.text_style_bold,
@@ -627,7 +636,7 @@ Enter your preferred Substrate address below.""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.next_btn.place(x=630, y=340)
+        self.next_btn.place(x=630, y=330)
 
         self.back_btn = tk.Button(self, text="BACK",
                                   font=controller.text_style_bold,
@@ -639,7 +648,7 @@ Enter your preferred Substrate address below.""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.back_btn.place(x=270, y=340)
+        self.back_btn.place(x=270, y=330)
 
 
 class SubmitSwap(tk.Frame):
@@ -656,25 +665,29 @@ class SubmitSwap(tk.Frame):
         dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
+        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
+        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_logo = ImageTk.PhotoImage(tick_img)
+
         # Inactive
         wallet_data_lbl = tk.Label(self, text="Wallet data", bg='white', font=controller.text_style)
         wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=45)
 
         # Inactive
         enable_this_tool_lbl = tk.Label(self, text="Enable this tool", bg='white', font=controller.text_style)
         enable_this_tool_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=110)
 
         # Inactive
         verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='white', font=controller.text_style)
         verify_ownership_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=175)
 
         # Active - Submit to swap
@@ -743,7 +756,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.next_btn.place(x=630, y=340)
+        self.next_btn.place(x=630, y=330)
 
         self.back_btn = tk.Button(self, text="BACK",
                                   font=controller.text_style_bold,
@@ -755,7 +768,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                   relief=tk.GROOVE,
                                   border=0,
                                   bg='#00A519')
-        self.back_btn.place(x=270, y=340)
+        self.back_btn.place(x=270, y=330)
 
     def signAddresses(self, message):
         directory = self.controller.shared_data["directory"].get()
@@ -808,6 +821,7 @@ class Finished(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        address = self.controller.shared_data["substrate-addr"].get()
 
         # Step(s) status - Wallet data ######
         active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
@@ -818,32 +832,36 @@ class Finished(tk.Frame):
         dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
+        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
+        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_logo = ImageTk.PhotoImage(tick_img)
+
         # Inactive
         wallet_data_lbl = tk.Label(self, text="Wallet data", bg='white', font=controller.text_style)
         wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=45)
 
         # Inactive
         enable_this_tool_lbl = tk.Label(self, text="Enable this tool", bg='white', font=controller.text_style)
         enable_this_tool_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=110)
 
         # Inactive
         verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='white', font=controller.text_style)
         verify_ownership_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=175)
 
         # Inactive
         submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='white', font=controller.text_style)
         submit_to_swap_lbl.place(x=90, y=240)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
         dot.place(x=40, y=240)
 
         # Active - Finished
@@ -863,6 +881,25 @@ class Finished(tk.Frame):
                                    font=controller.title_font)
         self.step_title.place(x=270, y=40)
         ######################################
+
+        self.finish_pg01 = tk.Label(self, text=f"""Congratulations, you have successfully signed your BITG address(s) with {address}.""",
+                                    font=controller.text_style,
+                                    justify=tk.LEFT,
+                                    wraplength=500,
+                                    bg='white')
+        self.finish_pg01.place(x=270, y=90)
+
+        self.whatnext = tk.Label(self, text="What's next?", fg='#00A519', bg='white',
+                                   font=controller.title_font)
+        self.whatnext.place(x=270, y=180)
+
+        self.finish_pg02 = tk.Label(self,
+                                    text=f"""Follow BitGreen announcements to get updates on when your funds will be credited and available at your Substrate address on the new blockchain.""",
+                                    font=controller.text_style,
+                                    justify=tk.LEFT,
+                                    wraplength=500,
+                                    bg='white')
+        self.finish_pg02.place(x=270, y=230)
 
         self.close_btn = tk.Button(self, text="CLOSE",
                                    font=controller.text_style_bold,
