@@ -101,20 +101,26 @@ def resourcePath(relativePath):
 class SwapApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.operating_system = os.name
 
-        self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
-        self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
-        self.EntryFont = tkfont.Font(family='Calibri light', size=11, weight="bold")
-        self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
-        self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
+        if self.operating_system != 'posix':
+            # Windows font specifications
+            self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
+            self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
+            self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
+            self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
+        else:
+            # Mac OS font specifications
+            self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
+            self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
+            self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
+            self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
 
         self.shared_data = {
             "directory": tk.StringVar(),
             "password": tk.StringVar(),
             "substrate-addr": tk.StringVar()
         }
-
-        self.operating_system = os.name
 
         # Application header
         header_img = Image.open(resourcePath('header.jpg'))
