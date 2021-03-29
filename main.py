@@ -4,6 +4,7 @@ import uuid
 import os.path
 from sys import exit
 from tkinter import ttk
+from tkmacosx import Button
 from utils import rpc_module
 from tkinter import filedialog
 from tkinter import messagebox
@@ -113,6 +114,8 @@ class SwapApplication(tk.Tk):
             "substrate-addr": tk.StringVar()
         }
 
+        self.operating_system = os.name
+
         # Application header
         header_img = Image.open(resourcePath('header.jpg'))
         header = ImageTk.PhotoImage(header_img)
@@ -171,38 +174,45 @@ class StartPage(tk.Frame):
         swap_logo_lbl.image = swap_logo
         swap_logo_lbl.pack(side="top", fill="y", anchor=tk.SW, padx=50, pady=45)
 
-        # Start
-        self.start_btn = tk.Button(self, text="START",
-                                   font=controller.text_style_bold,
-                                   fg='white',
-                                   command=lambda: controller.show_frame("WalletData"),
-                                   width=14,
-                                   height=1,
-                                   pady=4,
-                                   relief=tk.GROOVE,
-                                   border=0,
-                                   bg='#00A519')
-        self.start_btn.place(x=85, y=275)
+        if controller.operating_system != 'posix':
+            # Start - WINDOWS
+            self.start_btn = tk.Button(self, text="START",
+                                       font=controller.text_style_bold,
+                                       fg='#FFFFFF',
+                                       command=lambda: controller.show_frame("WalletData"),
+                                       width=14,
+                                       height=1,
+                                       pady=4,
+                                       relief=tk.GROOVE,
+                                       border=0,
+                                       bg='#00A519',
+                                       highlightbackground='#00A519')
+            self.start_btn.place(x=85, y=275)
+        else:
+            # Start - POSIX
+            self.start_btn = Button(self, text='START', bg='#00A519',
+                                          fg='#FFFFFF',
+                                          height=40, width=130, pady=4,
+                                          font=controller.text_style_bold,
+                                          command=lambda: controller.show_frame("WalletData"),
+                                          activebackground=('#00A519', '#00A519'),
+                                          activeforeground='#FFFFFF')
+            self.start_btn.place(x=85, y=275)
 
-        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses 
-that exist in your current BitGreen wallet, and to prove your ownership 
-of those addresses to submit to the swap process.
+        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current BitGreen wallet, and to prove your ownership of those addresses to submit to the swap process.
 
-Subsequently you will receive the equivalent funds to your preferred 
-Substrate address on the new blockchain.""",
+Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
                                        font=controller.text_style,
                                        justify=tk.LEFT,
-                                       wraplength=500,
-                                       bg='white')
+                                       wraplength=400,
+                                       bg='#FFFFFF')
         self.startpage_pg01.place(x=285, y=15, )
 
-        self.startpage_pg02 = tk.Label(self, text="""Note the snapshot date for address balances is block XXX 
-(or around 21st March 2021).To receive funds from the swap on 
-the new chain, you must have had a balance at this snapshot date.""",
+        self.startpage_pg02 = tk.Label(self, text="""Note the snapshot date for address balances is block XXX (or around 21st March 2021).To receive funds from the swap on the new chain, you must have had a balance at this snapshot date.""",
                                        font=controller.text_style_bold,
                                        justify=tk.LEFT,
-                                       wraplength=500,
-                                       bg='white',
+                                       wraplength=400,
+                                       bg='#FFFFFF',
                                        fg='#E80000')
         self.startpage_pg02.place(x=285, y=140, )
 
@@ -346,17 +356,30 @@ class WalletData(tk.Frame):
                                                                                           self.passwd_txtfld))
         self.passwd_txtfld.place(x=310, y=215, width=270, height=35)
 
-        self.next_btn = tk.Button(self, text="NEXT",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("EnableTool"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.next_btn.place(x=630, y=330)
+        if controller.operating_system != 'posix':
+            # Start - WINDOWS
+            self.next_btn = tk.Button(self, text="NEXT",
+                                      font=controller.text_style_bold,
+                                      fg='white',
+                                      command=lambda: controller.show_frame("EnableTool"),
+                                      width=14,
+                                      height=1,
+                                      pady=4,
+                                      relief=tk.GROOVE,
+                                      border=0,
+                                      bg='#00A519',
+                                      highlightbackground='#00A519')
+            self.next_btn.place(x=630, y=330)
+        else:
+            # Next - POSIX
+            self.next_btn = Button(self, text='NEXT', bg='#00A519',
+                                    fg='#FFFFFF',
+                                    height=40, width=130, pady=4,
+                                    font=controller.text_style_bold,
+                                    command=lambda: controller.show_frame("EnableTool"),
+                                    activebackground=('#00A519', '#00A519'),
+                                    activeforeground='#FFFFFF')
+            self.next_btn.place(x=630, y=330)
 
     def walletdir(self, event):
         # Allow user to select a directory and store it in global var
@@ -445,52 +468,68 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                         bg='white')
         self.walletdata_pg01.place(x=270, y=110)
 
-        self.create_config_btn = tk.Button(self, text="CREATE CONFIG",
-                                           font=controller.text_style_bold,
-                                           fg='white',
-                                           command=lambda : self.create_config(),
-                                           width=14,
-                                           pady=2,
-                                           relief=tk.GROOVE,
-                                           border=0,
-                                           bg='#00A519')
-        self.create_config_btn.place(x=270, y=200)
+        if controller.operating_system != 'posix':
+            self.create_config_btn = tk.Button(self, text="CREATE CONFIG", font=controller.text_style_bold,
+                                               fg='white', command=lambda: self.create_config(),
+                                               width=14, pady=2, relief=tk.GROOVE, border=0,
+                                               bg='#00A519', highlightbackground='#00A519')
+            self.create_config_btn.place(x=270, y=200)
 
-        self.enable_btn = tk.Button(self, text="ENABLE",
+            self.enable_btn = tk.Button(self, text="ENABLE", font=controller.text_style_bold,
+                                        fg='white', command=self.enable_rpc, width=8,
+                                        pady=2, relief=tk.GROOVE, border=0,
+                                        bg='#00A519', highlightbackground='#00A519', state=tk.DISABLED)
+            self.enable_btn.place(x=410, y=200)
+
+            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
+                                      fg='white', command=lambda: controller.show_frame("VerifyOwnership"),
+                                      width=14, height=1, pady=4, relief=tk.GROOVE,
+                                      border=0, bg='#00A519', highlightbackground='#00A519')
+            self.next_btn.place(x=630, y=330)
+
+            self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold,
+                                      fg='white', command=lambda: controller.show_frame("WalletData"),
+                                      width=14, height=1, pady=4, relief=tk.GROOVE,
+                                      border=0, bg='#00A519', highlightbackground='#00A519')
+            self.back_btn.place(x=270, y=330)
+        else:
+            self.create_config_btn = Button(self, text='CREATE CONFIG', bg='#00A519',
+                                    fg='#FFFFFF',
+                                    height=40, width=130, pady=4,
                                     font=controller.text_style_bold,
-                                    fg='white',
-                                    command=self.enable_rpc,
-                                    width=8,
-                                    pady=2,
-                                    relief=tk.GROOVE,
-                                    border=0,
-                                    bg='#00A519',
-                                    state=tk.DISABLED)
-        self.enable_btn.place(x=410, y=200)
+                                    command=lambda: self.create_config(),
+                                    activebackground=('#00A519', '#00A519'),
+                                    activeforeground='#FFFFFF')
+            self.create_config_btn.place(x=270, y=200)
 
-        self.next_btn = tk.Button(self, text="NEXT",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("VerifyOwnership"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.next_btn.place(x=630, y=330)
+            self.enable_btn = Button(self, text='ENABLE', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=self.enable_rpc,
+                                            disabledforeground='#FFFFFF',
+                                            disabledbackground='#BFBFBF',
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF', state=tk.DISABLED)
+            self.enable_btn.place(x=410, y=200)
 
-        self.back_btn = tk.Button(self, text="BACK",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("WalletData"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.back_btn.place(x=270, y=330)
+            self.next_btn = Button(self, text='NEXT', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("VerifyOwnership"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.next_btn.place(x=630, y=330)
+
+            self.back_btn = Button(self, text='BACK', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("WalletData"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.back_btn.place(x=270, y=330)
 
     def create_config(self):
         directory = self.controller.shared_data["directory"].get()
@@ -626,30 +665,50 @@ Enter your preferred Substrate address below.""",
         icon_key.image = icon_wallet_logo
         icon_key.place(x=270, y=286)
 
-        self.next_btn = tk.Button(self, text="NEXT",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("SubmitSwap"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.next_btn.place(x=630, y=330)
+        if controller.operating_system != 'posix':
+            self.next_btn = tk.Button(self, text="NEXT",
+                                      font=controller.text_style_bold,
+                                      fg='white',
+                                      command=lambda: controller.show_frame("SubmitSwap"),
+                                      width=14,
+                                      height=1,
+                                      pady=4,
+                                      relief=tk.GROOVE,
+                                      border=0,
+                                      bg='#00A519',
+                                      highlightbackground='#00A519')
+            self.next_btn.place(x=630, y=330)
 
-        self.back_btn = tk.Button(self, text="BACK",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("EnableTool"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.back_btn.place(x=270, y=330)
+            self.back_btn = tk.Button(self, text="BACK",
+                                      font=controller.text_style_bold,
+                                      fg='white',
+                                      command=lambda: controller.show_frame("EnableTool"),
+                                      width=14,
+                                      height=1,
+                                      pady=4,
+                                      relief=tk.GROOVE,
+                                      border=0,
+                                      bg='#00A519',
+                                      highlightbackground='#00A519')
+            self.back_btn.place(x=270, y=330)
+        else:
+            self.next_btn = Button(self, text='NEXT', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("SubmitSwap"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.next_btn.place(x=630, y=330)
 
+            self.back_btn = Button(self, text='BACK', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("EnableTool"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.back_btn.place(x=270, y=330)
 
 class SubmitSwap(tk.Frame):
     def __init__(self, parent, controller):
@@ -735,40 +794,71 @@ Click 'Submit' to proceed and submit this information to the swap process""",
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.t.place(x=480, y=100)
 
-        self.submit_btn = tk.Button(self, text="SUBMIT",
-                                    font=controller.text_style_bold,
-                                    fg='white',
-                                    command=self.submit2swap,
-                                    width=8,
-                                    pady=2,
-                                    relief=tk.GROOVE,
-                                    border=0,
-                                    bg='#00A519')
-        self.submit_btn.place(x=480, y=290)
+        if controller.operating_system != 'posix':
+            self.submit_btn = tk.Button(self, text="SUBMIT",
+                                        font=controller.text_style_bold,
+                                        fg='white',
+                                        command=self.submit2swap,
+                                        width=8,
+                                        pady=2,
+                                        relief=tk.GROOVE,
+                                        border=0,
+                                        bg='#00A519',
+                                        highlightbackground='#00A519')
+            self.submit_btn.place(x=480, y=290)
 
-        self.next_btn = tk.Button(self, text="NEXT",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("Finished"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.next_btn.place(x=630, y=330)
+            self.next_btn = tk.Button(self, text="NEXT",
+                                      font=controller.text_style_bold,
+                                      fg='white',
+                                      command=lambda: controller.show_frame("Finished"),
+                                      width=14,
+                                      height=1,
+                                      pady=4,
+                                      relief=tk.GROOVE,
+                                      border=0,
+                                      bg='#00A519',
+                                      highlightbackground='#00A519')
+            self.next_btn.place(x=630, y=330)
 
-        self.back_btn = tk.Button(self, text="BACK",
-                                  font=controller.text_style_bold,
-                                  fg='white',
-                                  command=lambda: controller.show_frame("VerifyOwnership"),
-                                  width=14,
-                                  height=1,
-                                  pady=4,
-                                  relief=tk.GROOVE,
-                                  border=0,
-                                  bg='#00A519')
-        self.back_btn.place(x=270, y=330)
+            self.back_btn = tk.Button(self, text="BACK",
+                                      font=controller.text_style_bold,
+                                      fg='white',
+                                      command=lambda: controller.show_frame("VerifyOwnership"),
+                                      width=14,
+                                      height=1,
+                                      pady=4,
+                                      relief=tk.GROOVE,
+                                      border=0,
+                                      bg='#00A519',
+                                      highlightbackground='#00A519')
+            self.back_btn.place(x=270, y=330)
+        else:
+            self.submit_btn = Button(self, text='SUBMIT', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=self.submit2swap,
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.submit_btn.place(x=480, y=290)
+
+            self.next_btn = Button(self, text='NEXT', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("Finished"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.next_btn.place(x=630, y=330)
+
+            self.back_btn = Button(self, text='NEXT', bg='#00A519',
+                                            fg='#FFFFFF',
+                                            height=40, width=130, pady=4,
+                                            font=controller.text_style_bold,
+                                            command=lambda: controller.show_frame("VerifyOwnership"),
+                                            activebackground=('#00A519', '#00A519'),
+                                            activeforeground='#FFFFFF')
+            self.back_btn.place(x=270, y=330)
 
     def signAddresses(self, message):
         directory = self.controller.shared_data["directory"].get()
@@ -781,7 +871,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
             messagebox.showinfo("Error", "You must specify the block directory.")
             return
 
-        if os.path.isfile(f"{directory}/wallet.dat"):
+        if os.path.isfile(f"{directory}/wallet.dat") or os.path.isfile(f"{directory}/wallets/wallet.dat"):
             signer = Signer()
 
             # gather list of addresses associated with wallet
@@ -901,18 +991,28 @@ class Finished(tk.Frame):
                                     bg='white')
         self.finish_pg02.place(x=270, y=230)
 
-        self.close_btn = tk.Button(self, text="CLOSE",
+        if controller.operating_system != 'posix':
+            self.close_btn = tk.Button(self, text="CLOSE",
+                                       font=controller.text_style_bold,
+                                       fg='white',
+                                       command=lambda: controller.destroy(),
+                                       width=14,
+                                       height=1,
+                                       pady=4,
+                                       relief=tk.GROOVE,
+                                       border=0,
+                                       bg='#00A519',
+                                       highlightbackground='#00A519')
+            self.close_btn.place(x=600, y=330)
+        else:
+            self.close_btn = Button(self, text='CLOSE', bg='#00A519',
+                                   fg='#FFFFFF',
+                                   height=40, width=130, pady=4,
                                    font=controller.text_style_bold,
-                                   fg='white',
                                    command=lambda: controller.destroy(),
-                                   width=14,
-                                   height=1,
-                                   pady=4,
-                                   relief=tk.GROOVE,
-                                   border=0,
-                                   bg='#00A519')
-        self.close_btn.place(x=600, y=340)
-
+                                   activebackground=('#00A519', '#00A519'),
+                                   activeforeground='#FFFFFF')
+            self.close_btn.place(x=630, y=330)
 
 def on_closing():
     if messagebox.askokcancel('Quit', 'Are you sure you want to exit?'):
