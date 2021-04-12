@@ -101,12 +101,20 @@ def resourcePath(relativePath):
 class SwapApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.operating_system = os.name
 
-        self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
-        self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
-        self.EntryFont = tkfont.Font(family='Calibri light', size=11, weight="bold")
-        self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
-        self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
+        if self.operating_system != 'posix':
+            # Windows font specifications
+            self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
+            self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
+            self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
+            self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
+        else:
+            # Mac OS font specifications
+            self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
+            self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
+            self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
+            self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
 
         self.shared_data = {
             "directory": tk.StringVar(),
@@ -196,7 +204,7 @@ class StartPage(tk.Frame):
                                           font=controller.text_style_bold,
                                           command=lambda: controller.show_frame("WalletData"),
                                           activebackground=('#00A519', '#00A519'),
-                                          activeforeground='#FFFFFF')
+                                          activeforeground='#FFFFFF', borderless=True)
             self.start_btn.place(x=85, y=275)
 
         self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current BitGreen wallet, and to prove your ownership of those addresses to submit to the swap process.
@@ -204,14 +212,14 @@ class StartPage(tk.Frame):
 Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
                                        font=controller.text_style,
                                        justify=tk.LEFT,
-                                       wraplength=400,
+                                       wraplength=380,
                                        bg='#FFFFFF')
         self.startpage_pg01.place(x=285, y=15, )
 
         self.startpage_pg02 = tk.Label(self, text="""Note the snapshot date for address balances is block XXX (or around 21st March 2021).To receive funds from the swap on the new chain, you must have had a balance at this snapshot date.""",
                                        font=controller.text_style_bold,
                                        justify=tk.LEFT,
-                                       wraplength=400,
+                                       wraplength=380,
                                        bg='#FFFFFF',
                                        fg='#E80000')
         self.startpage_pg02.place(x=285, y=140, )
@@ -321,7 +329,7 @@ class WalletData(tk.Frame):
                                         text="""Select the directory where your BitGreen wallet data is located, and if you have encrypted your wallet, enter the password.""",
                                         font=controller.text_style,
                                         justify=tk.LEFT,
-                                        wraplength=500,
+                                        wraplength=400,
                                         bg='white')
         self.walletdata_pg01.place(x=270, y=110)
 
@@ -339,7 +347,7 @@ class WalletData(tk.Frame):
         self.walletdir_txtfld.bind("<FocusOut>",
                                    lambda event, message="Wallet password": handle_focus_out(event, "Directory",
                                                                                              self.walletdir_txtfld))
-        self.walletdir_txtfld.place(x=310, y=170, width=380, height=35)
+        self.walletdir_txtfld.place(x=310, y=170, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_key_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_key_logo
@@ -354,7 +362,7 @@ class WalletData(tk.Frame):
         self.passwd_txtfld.bind("<FocusOut>",
                                 lambda event, message="Wallet password": handle_focus_out(event, "Wallet password",
                                                                                           self.passwd_txtfld))
-        self.passwd_txtfld.place(x=310, y=215, width=270, height=35)
+        self.passwd_txtfld.place(x=310, y=215, width=452, height=35)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
@@ -378,7 +386,7 @@ class WalletData(tk.Frame):
                                     font=controller.text_style_bold,
                                     command=lambda: controller.show_frame("EnableTool"),
                                     activebackground=('#00A519', '#00A519'),
-                                    activeforeground='#FFFFFF')
+                                    activeforeground='#FFFFFF', borderless=True)
             self.next_btn.place(x=630, y=330)
 
     def walletdir(self, event):
@@ -459,9 +467,9 @@ class EnableTool(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.walletdata_pg01 = tk.Label(self, text="""It is requires to update the bitgreen.conf file in your BitGreen wallet's data folder so that this tool is able to communicate with your wallet.
+        self.walletdata_pg01 = tk.Label(self, text="""It is required to create a bitgreen.conf file in your wallets block directory in order for the swap tool to be able to communicate with your wallet.
         
-Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
+Click 'CREATE CONFIG' before pressing 'Enable' to complete this action. This will unlock your wallet for 15 minutes (if it's encrypted)""",
                                         font=controller.text_style,
                                         justify=tk.LEFT,
                                         wraplength=500,
@@ -499,7 +507,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                     font=controller.text_style_bold,
                                     command=lambda: self.create_config(),
                                     activebackground=('#00A519', '#00A519'),
-                                    activeforeground='#FFFFFF')
+                                    activeforeground='#FFFFFF', borderless=True)
             self.create_config_btn.place(x=270, y=200)
 
             self.enable_btn = Button(self, text='ENABLE', bg='#00A519',
@@ -510,7 +518,8 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                             disabledforeground='#FFFFFF',
                                             disabledbackground='#BFBFBF',
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF', state=tk.DISABLED)
+                                            activeforeground='#FFFFFF', state=tk.DISABLED,
+                                            borderless=True)
             self.enable_btn.place(x=410, y=200)
 
             self.next_btn = Button(self, text='NEXT', bg='#00A519',
@@ -519,7 +528,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("VerifyOwnership"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', bg='#00A519',
@@ -528,7 +537,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action.""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("WalletData"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.back_btn.place(x=270, y=330)
 
     def create_config(self):
@@ -659,7 +668,7 @@ Enter your preferred Substrate address below.""",
         self.substrate_txtfld.bind("<FocusOut>", lambda event, message="Substrate address": handle_focus_out(event,
                                                                                                              "Substrate address",
                                                                                                              self.substrate_txtfld))
-        self.substrate_txtfld.place(x=310, y=285, width=380, height=35)
+        self.substrate_txtfld.place(x=310, y=285, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_wallet_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_wallet_logo
@@ -698,7 +707,7 @@ Enter your preferred Substrate address below.""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("SubmitSwap"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', bg='#00A519',
@@ -707,8 +716,9 @@ Enter your preferred Substrate address below.""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("EnableTool"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.back_btn.place(x=270, y=330)
+
 
 class SubmitSwap(tk.Frame):
     def __init__(self, parent, controller):
@@ -786,16 +796,17 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                         bg='white')
         self.submitswap_pg01.place(x=270, y=100)
 
-        self.scrollbar = tk.Scrollbar(self)
-        self.t = tk.Text(self, height=18, width=70, yscrollcommand=self.scrollbar.set, font=("Helvetica", 6),
-                         borderwidth=1,
-                         relief="solid", wrap=tk.NONE)
-        self.scrollbar.config(command=self.t.yview)
-        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.t.place(x=480, y=100)
-
         if controller.operating_system != 'posix':
-            self.submit_btn = tk.Button(self, text="SUBMIT",
+            # json output
+            self.scrollbar = tk.Scrollbar(self)
+            self.t = tk.Text(self, height=18, width=55, yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
+                             borderwidth=1,
+                             relief="solid", wrap=tk.NONE)
+            self.scrollbar.config(command=self.t.yview)
+            self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            self.t.place(x=480, y=100)
+
+            self.submit_btn = tk.Button(self, text="SIGN",
                                         font=controller.text_style_bold,
                                         fg='white',
                                         command=self.submit2swap,
@@ -833,14 +844,23 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                       highlightbackground='#00A519')
             self.back_btn.place(x=270, y=330)
         else:
-            self.submit_btn = Button(self, text='SUBMIT', bg='#00A519',
+            # json output
+            self.scrollbar = tk.Scrollbar(self)
+            self.t = tk.Text(self, height=20, width=54, yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
+                             borderwidth=1,
+                             relief="solid", wrap=tk.NONE)
+            self.scrollbar.config(command=self.t.yview)
+            self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            self.t.place(x=480, y=100)
+
+            self.submit_btn = Button(self, text='SIGN', bg='#00A519',
                                             fg='#FFFFFF',
                                             height=40, width=130, pady=4,
                                             font=controller.text_style_bold,
                                             command=self.submit2swap,
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
-            self.submit_btn.place(x=480, y=290)
+                                            activeforeground='#FFFFFF', borderless=True)
+            self.submit_btn.place(x=630, y=290)
 
             self.next_btn = Button(self, text='NEXT', bg='#00A519',
                                             fg='#FFFFFF',
@@ -848,7 +868,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("Finished"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='NEXT', bg='#00A519',
@@ -857,7 +877,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                             font=controller.text_style_bold,
                                             command=lambda: controller.show_frame("VerifyOwnership"),
                                             activebackground=('#00A519', '#00A519'),
-                                            activeforeground='#FFFFFF')
+                                            activeforeground='#FFFFFF', borderless=True)
             self.back_btn.place(x=270, y=330)
 
     def signAddresses(self, message):
@@ -1011,7 +1031,7 @@ class Finished(tk.Frame):
                                    font=controller.text_style_bold,
                                    command=lambda: controller.destroy(),
                                    activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF')
+                                   activeforeground='#FFFFFF', borderless=True)
             self.close_btn.place(x=630, y=330)
 
 def on_closing():
@@ -1024,7 +1044,7 @@ if __name__ == '__main__':
     wallet = Wallet()
     window = SwapApplication()
     window.protocol('WM_DELETE_WINDOW', on_closing)
-    window.iconbitmap(resourcePath('favicon.ico'))
+    window.iconbitmap(resourcePath('favicon.icns'))
     window.title('BitGreen Swap Tool')
     window.geometry("800x500+10+10")
     window.resizable(False, False)
