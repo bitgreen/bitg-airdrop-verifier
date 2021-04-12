@@ -64,7 +64,7 @@ class Wallet:
     def unlock(self, passwd=None):
         if self.isLocked():
             if rpc.walletpassphrase(passwd, 900) is None:
-                messagebox.showinfo('message', 'Wallet is locked, please unlock using passphrase')
+                messagebox.showinfo('message', 'Wallet is locked, please unlock using passphrase.')
             else:
                 return True
         else:
@@ -517,21 +517,21 @@ rpcport=8331
 rpcuser=SignWithSubstrate
 rpcpassword=SignWithSubstrate""")
                 messagebox.showinfo("Information",
-                                    "Bitgreen.conf created!\n\nRestart your wallet if opened already.\nIf not, open your BitGreen wallet before clicking 'ENABLE'.")
+                                    f"{self.controller.shared_data['directory'].get()}/bitgreen.conf created!\n\nRestart your Bitgreen wallet if opened already.\nIf not, open your BitGreen wallet before clicking 'ENABLE'.")
                 self.enable_btn["state"] = tk.NORMAL
         else:
-            messagebox.showinfo("Error", "Please check you have specified the correct block directory")
+            messagebox.showinfo("Error", "Please check you have specified the correct block directory.")
 
     def enable_rpc(self):
         passwd = self.controller.shared_data["password"].get()
 
         if not rpc.isRpcRunning():
             messagebox.showinfo("Error",
-                                "Unable to connect via RPC 127.0.0.1:8331\nMake sure your wallet has been restarted or open")
+                                "Unable to connect via RPC 127.0.0.1:8331\nMake sure your wallet has been restarted or is running.")
             return
 
         if wallet.unlock(passwd):
-            messagebox.showinfo("Information", "Wallet unlocked for 15 minutes")
+            messagebox.showinfo("Information", "Wallet unlocked for 15 minutes.")
 
 
 class VerifyOwnership(tk.Frame):
@@ -603,10 +603,9 @@ class VerifyOwnership(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.verify_pg01 = tk.Label(self, text="""This step involves signing a message for each BITG address found,
-associating it with your preferred Substrate address on the new chain.
+        self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step.
         
-This both proves that your Substrate address 'owns' the BITG addresses on the old chain, and in the submission on the next step will authorise the equivalent funds to be sent to your Substrate address on the new chain by generating a .json file containing all addresses, signatures and Substrate address signed with. 
+This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the swap will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.
 
 Enter your preferred Substrate address below.""",
                                     font=controller.text_style, justify=tk.LEFT,
@@ -721,9 +720,9 @@ class SubmitSwap(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.submitswap_pg01 = tk.Label(self, text="""To the right is the total BITG addresses found, each signed with their private key to prove ownership, using a message stating your provided Substrate address.
+        self.submitswap_pg01 = tk.Label(self, text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.
 
-Click 'Submit' to proceed and submit this information to the swap process""",
+This will create a file in your wallets block directory called 'substrate-signed.json'.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=205, bg='#FFFFFF')
         self.submitswap_pg01.place(x=270, y=100)
@@ -747,7 +746,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
                                       fg='#FFFFFF', command=lambda: controller.show_frame("Finished"),
                                       height=1,  width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#00A519', highlightbackground='#00A519', state=tk.DISABLED)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold,
@@ -776,7 +775,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
                                    fg='#FFFFFF', command=lambda: controller.show_frame("Finished"),
                                    height=40, width=130, pady=4,
                                    activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True, state=tk.DISABLED)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='NEXT', font=controller.text_style_bold,
@@ -819,6 +818,7 @@ Click 'Submit' to proceed and submit this information to the swap process""",
 
             with open(f"{directory}\substrate-signed.json", "w") as outfile:
                 json.dump(output, outfile, indent=4)
+            self.next_btn["state"] = tk.NORMAL
             messagebox.showinfo("Information", f"substrate-signed.json created in {directory}")
         else:
             messagebox.showinfo("Error", "Please check you have specified the correct block directory")
