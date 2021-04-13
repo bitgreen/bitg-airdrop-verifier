@@ -112,9 +112,9 @@ class SwapApplication(tk.Tk):
         else:
             # Mac OS font specifications
             self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
-            self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
-            self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
-            self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
+            self.title_font_step = tkfont.Font(family='Calibri light', size=12, weight="bold")
+            self.text_style = tkfont.Font(family='Calibri light', size=12, weight="normal")
+            self.text_style_bold = tkfont.Font(family='Calibri Light', size=12, weight="bold")
 
         self.shared_data = {
             "directory": tk.StringVar(),
@@ -473,7 +473,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action. This wil
                                             height=40, width=130, pady=4,
                                             activebackground=('#00A519', '#00A519'),
                                             activeforeground='#FFFFFF', bg='#00A519', borderless=True)
-            self.create_config_btn.place(x=270, y=200)
+            self.create_config_btn.place(x=270, y=215)
 
             self.enable_btn = Button(self, text='ENABLE', font=controller.text_style_bold,
                                      fg='#FFFFFF', command=self.enable_rpc,
@@ -482,7 +482,7 @@ Click 'CREATE CONFIG' before pressing 'Enable' to complete this action. This wil
                                      activebackground=('#00A519', '#00A519'),
                                      activeforeground='#FFFFFF',
                                      state=tk.DISABLED, bg='#00A519', borderless=True)
-            self.enable_btn.place(x=410, y=200)
+            self.enable_btn.place(x=410, y=215)
 
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
                                    fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
@@ -774,6 +774,7 @@ This will create a file in your wallets block directory called 'substrate-signed
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
                                    fg='#FFFFFF', command=lambda: controller.show_frame("Finished"),
                                    height=40, width=130, pady=4,
+                                   disabledforeground='#FFFFFF', disabledbackground='#BFBFBF',
                                    activebackground=('#00A519', '#00A519'),
                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True, state=tk.DISABLED)
             self.next_btn.place(x=630, y=330)
