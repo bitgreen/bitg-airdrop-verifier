@@ -4,7 +4,7 @@ Always check authenticity of any application you are downloading. By utilizing t
 Windows: `certutil -hashfile bitgreen-swap-tool.exe`
 ```
 SHA1 hash of bitgreen-swap-tool.exe:
-01d93a3d26bd9c0ada23ae299495278ae18d16cc
+e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
 CertUtil: -hashfile command completed successfully.
 ```
 
