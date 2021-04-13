@@ -1,14 +1,14 @@
 ### Checking application authenticity
 Always check authenticity of any application you are downloading. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified and should match the values below.
 
-Windows: `certutil -hashfile bitgreen-swap-tool.exe`
+**Windows:** `certutil -hashfile bitgreen-swap-tool.exe`
 ```
 SHA1 hash of bitgreen-swap-tool.exe:
 e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
 CertUtil: -hashfile command completed successfully.
 ```
 
-Mac OS: `shasum -a 1 bitgreen-swap-tool`
+**Mac OS:** `shasum -a 1 bitgreen-swap-tool`
 ```
 
 ```
