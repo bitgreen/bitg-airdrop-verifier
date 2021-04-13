@@ -1,4 +1,19 @@
-Temporary notes on building for various platforms. More information to be added as progress/testing is carried out.
+### Checking application authenticity
+Always check authenticity of any application you are downloading. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified and should match the values below.
+
+Windows: `certutil -hashfile bitgreen-swap-tool.exe`
+```
+SHA1 hash of bitgreen-swap-tool.exe:
+01d93a3d26bd9c0ada23ae299495278ae18d16cc
+CertUtil: -hashfile command completed successfully.
+```
+
+Mac OS: `shasum -a 1 bitgreen-swap-tool`
+```
+
+```
+
+
 
 ### prerequisites
 [Python 3.8.5](https://www.python.org/downloads/release/python-385/)  
