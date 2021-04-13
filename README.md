@@ -25,6 +25,7 @@ When testing locally, move contents inside /img into the root folder of main.py 
 ### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
 ```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --noconsole --icon=img\favicon.ico -n bitgreen-swap-tool --clean```  
+
 ```Set-AuthenticodeSignature -FilePath bitgreen-swap-tool.exe -Certificate (Get-ChildItem Cert:\LocalMachine\My)[1] -Verbose```
 
 Mac OS:  ```pyinstaller```
