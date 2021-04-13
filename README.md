@@ -12,17 +12,17 @@ Mac OS: `shasum -a 1 bitgreen-swap-tool`
 ```
 
 ```
+---
 
 
-
-### prerequisites
+### Prerequisites
 [Python 3.8.5](https://www.python.org/downloads/release/python-385/)  
-pip3 install requests pillow tkmacosx
+pip3 install requests pillow tkmacosx pyinstaller
 
 ### Local testing
 When testing locally, move contents inside /img into the root folder of main.py before invoking `python3 main.py` or `py .\main.py` for windows user.
 
-### pyinstaller - building standalone application (Windows, Linux, Mac OS)
+### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
 ```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --noconsole --icon=img\favicon.ico -n bitgreen-swap-tool --clean``` 
 
