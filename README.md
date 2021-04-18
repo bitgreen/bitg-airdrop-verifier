@@ -10,7 +10,7 @@ CertUtil: -hashfile command completed successfully.
 
 **Mac OS:** `shasum -a 1 bitgreen-swap-tool`
 ```
-868342fcd6e726fe9319f6bf2d4a4920edf5510b  bitgreen-swap-tool_MACOSX.zip
+9d842cce4c4e68c3f47184273631f22fdb438b62  bitgreen-swap-tool_MacOSX.zip
 ```
 ---
 
