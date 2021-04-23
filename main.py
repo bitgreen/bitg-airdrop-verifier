@@ -213,13 +213,22 @@ Subsequently you will receive the equivalent funds to your preferred Substrate a
         self.before_you_begin = tk.Label(self, text="Before you begin", fg='#00A519', bg='#FFFFFF', font=controller.title_font)
         self.before_you_begin.place(x=285, y=220)
 
-        self.startpage_pg03 = tk.Label(self, text=u"""Please ensure that:
-        
+        if controller.operating_system != 'posix':
+            self.startpage_pg03 = tk.Label(self, text=u"""Please ensure that:
+            
             Your BitGreen desktop wallet is open
-    
+        
             You already have a substrate address for the new chain
-""", font=controller.text_style, justify=tk.LEFT, wraplength=500, bg='#FFFFFF')
-        self.startpage_pg03.place(x=285, y=265, )
+            """, font=controller.text_style, justify=tk.LEFT, wraplength=500, bg='#FFFFFF')
+            self.startpage_pg03.place(x=285, y=265)
+        else:
+            self.startpage_pg03 = tk.Label(self, text=u"""Please ensure that:
+
+            Your BitGreen desktop wallet is open
+
+            You already have a substrate address for the new chain
+            """, font=controller.text_style, justify=tk.LEFT, wraplength=500, bg='#FFFFFF')
+            self.startpage_pg03.place(x=285, y=275)
 
         dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = dot_logo
@@ -817,8 +826,13 @@ This will create a file in your wallets block directory called 'substrate-signed
             self.t.insert(tk.END, json.dumps(output, indent=4))
             self.t.configure(state="disabled")
 
-            with open(f"{directory}\substrate-signed.json", "w") as outfile:
-                json.dump(output, outfile, indent=4)
+            if self.controller.operating_system != 'posix':
+                with open(f"{directory}\substrate-signed.json", "w") as outfile:
+                    json.dump(output, outfile, indent=4)
+            else:
+                with open(f"{directory}/substrate-signed.json", "w") as outfile:
+                    json.dump(output, outfile, indent=4)
+
             self.next_btn["state"] = tk.NORMAL
             messagebox.showinfo("Information", f"substrate-signed.json created in {directory}")
         else:
@@ -936,7 +950,6 @@ if __name__ == '__main__':
     wallet = Wallet()
     window = SwapApplication()
     window.protocol('WM_DELETE_WINDOW', on_closing)
-    window.iconbitmap(resourcePath('favicon.ico'))
     window.title('BitGreen Swap Tool')
     window.geometry("800x500+10+10")
     window.resizable(False, False)
