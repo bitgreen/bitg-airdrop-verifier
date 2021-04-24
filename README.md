@@ -1,5 +1,5 @@
 ### Checking application authenticity
-Always check authenticity of any application you are downloading. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified and should match the values below.
+Always check the authenticity of any application you are downloading over the internet. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified/tampered and should match the values below.
 
 **Windows:** `certutil -hashfile bitgreen-swap-tool.exe`
 ```
