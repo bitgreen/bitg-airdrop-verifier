@@ -28,21 +28,42 @@ class Signer:
         for addr in rpc.listaddressgroupings():
             if len(addr) > 1:
                 for addr in addr:
-                    self.address_list.update({addr[0]: ''})
+                    address_data = rpc.getaddrinfo(addr[0])
+                    self.address_list.update({address_data['scriptPubKey']: {
+                                                'addr': addr[0],
+                                                'pubkey': address_data['pubkey'],
+                                                'sig': ''
+                                                }
+                                            })
             else:
-                self.address_list.update({addr[0][0]: ''})
+                address_data = rpc.getaddrinfo(addr[0][0])
+                self.address_list.update({address_data['scriptPubKey']: {
+                                            'addr': addr[0][0],
+                                            'pubkey': address_data['pubkey'],
+                                            'sig': ''
+                                            }
+                                        })
 
     def private_keys(self):
         # iterate through each public key and dump the private key that corresponds
-        # update dictionary 'address_list' with the private key to be later used for
+        # update dictionary 'address_list' with the private key inside ['sig'] to be later used when
         # signing a message proving ownership of address
         for key, value in self.address_list.items():
-            self.address_list.update({key: rpc.dumpprivkey(key)})
+            self.address_list.update({key: {
+                                        'addr': value['addr'],
+                                        'pubkey': value['pubkey'],
+                                        'sig': rpc.dumpprivkey(value['addr'])
+                                        }
+                                    })
 
     def signmessage(self, message):
         for key, value in self.address_list.items():
-            self.address_list.update({key: rpc.signmessagewithprivkey(value, message)})
-
+            self.address_list.update({key: {
+                                        'addr': value['addr'],
+                                        'pubkey': value['pubkey'],
+                                        'sig': rpc.signmessagewithprivkey(value['sig'], message)
+                                    }
+                                })
 
 class Wallet:
     def __init__(self):
@@ -818,7 +839,7 @@ This will create a file in your wallets block directory called 'substrate-signed
             # sign with message
             signer.signmessage(message)
 
-            output = {'addresses': signer.address_list,
+            output = {'data': signer.address_list,
                       'substrate-address': message}
 
             self.t.configure(state="normal")
