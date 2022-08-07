@@ -21,11 +21,11 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 ### Prerequisites
 ##### Windows/Mac OS
 [Python 3.8.5](https://www.python.org/downloads/release/python-385/)  
-`pip3 install requests pillow tkmacosx pyinstaller`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
 
 ##### __Ubuntu 20.04+__
 `sudo pt install python3-pip python3-tk python3-pil.imagetk`  
-`pip3 install requests tkmacosx pyinstaller`
+`pip3 install requests tkmacosx pyinstaller walletlib ecdsa`
 
 ### Local testing
 When testing locally, move contents inside /img into the root folder of main.py before invoking `python3 main.py` or `py .\main.py` for windows user.
