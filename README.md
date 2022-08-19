@@ -1,5 +1,5 @@
-#### MacOSX Preview
-![](https://s3.gifyu.com/images/swap-tool.gif)
+#### Preview
+![preview.png](img/preview.png)
 
 ### Checking application authenticity
 Always check the authenticity of any application you are downloading over the internet. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified/tampered and should match the values below.
@@ -15,6 +15,7 @@ CertUtil: -hashfile command completed successfully.
 ```
 d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 ```
+
 ---
 
 
@@ -26,7 +27,7 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 
 ##### __Ubuntu 20.04+__
 `sudo apt install python3-pip python3-tk python3-pil.imagetk`  
-`pip3 install requests tkmacosx pyinstaller walletlib ecdsa`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
 
 ### Local testing
 When testing locally, move contents inside /img into the root folder of main.py before invoking `python3 main.py` or `py .\main.py` for windows user.
@@ -37,4 +38,8 @@ Windows:
 
 ```Set-AuthenticodeSignature -FilePath bitgreen-swap-tool.exe -Certificate (Get-ChildItem Cert:\LocalMachine\My)[1] -Verbose```
 
-Mac OS:  ```pyinstaller```
+Ubuntu:  
+```pyinstaller --onefile main.py --add-data "img/*.jpg:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
+
+Mac OS:  
+```pyinstaller```
