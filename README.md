@@ -25,7 +25,7 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 `pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
 
 ##### __Ubuntu 20.04+__
-`sudo pt install python3-pip python3-tk python3-pil.imagetk`  
+`sudo apt install python3-pip python3-tk python3-pil.imagetk`  
 `pip3 install requests tkmacosx pyinstaller walletlib ecdsa`
 
 ### Local testing
