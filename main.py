@@ -1,15 +1,13 @@
 import sys
 import json
-import uuid
 import os.path
 from sys import exit
 from tkinter import ttk
 from tkmacosx import Button
-from utils import rpc_module, library
+from utils import rpc_module, library, walletlib
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
-from walletlib import Walletdat, ProtobufWallet
 import click
 
 try:
@@ -648,9 +646,13 @@ This will create a file in your wallets block directory called 'substrate-signed
         directory = self.controller.shared_data["directory"].get()
 
         if os.path.isfile(f"{directory}/wallet.dat"):
-            w = Walletdat.load(f"{directory}/wallet.dat")
+            w = walletlib.Walletdat.load(f"{directory}/wallet.dat")
+        elif os.path.isfile(f"{directory}/wallets/wallet.dat"):
+            w = walletlib.Walletdat.load(f"{directory}/wallets/wallet.dat")
         else:
-            w = Walletdat.load(f"{directory}/wallets/wallet.dat")
+            messagebox.showinfo("Error", "Invalid wallet path specified. No wallet found.")
+            return
+
         click.echo("Loaded file")
         if password:
             w.parse(passphrase=str(password))
