@@ -194,12 +194,12 @@ class StartPage(tk.Frame):
 
         # Swap logo
         swap_logo_img = Image.open(resourcePath('icons_BitGreen Swap.jpg'))
-        swap_logo_img = swap_logo_img.resize((200, 200), Image.ANTIALIAS)
+        swap_logo_img = swap_logo_img.resize((200, 200), Image.Resampling.LANCZOS)
         swap_logo = ImageTk.PhotoImage(swap_logo_img)
 
         # Call .jpg image into PhotoImage
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
+        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
         swap_logo_lbl = tk.Label(self, image=swap_logo, borderwidth=0, highlightthickness=0)
@@ -276,21 +276,21 @@ class WalletData(tk.Frame):
 
         # Call .jpg image into PhotoImage
         icon_folder_img = Image.open(resourcePath('icons_Folder.jpg'))
-        icon_folder_img = icon_folder_img.resize((30, 30), Image.ANTIALIAS)
+        icon_folder_img = icon_folder_img.resize((30, 30), Image.Resampling.LANCZOS)
         icon_folder_logo = ImageTk.PhotoImage(icon_folder_img)
 
         # Call .jpg image into PhotoImage
         icon_key_img = Image.open(resourcePath('icons_Key.jpg'))
-        icon_key_img = icon_key_img.resize((30, 30), Image.ANTIALIAS)
+        icon_key_img = icon_key_img.resize((30, 30), Image.Resampling.LANCZOS)
         icon_key_logo = ImageTk.PhotoImage(icon_key_img)
 
         # Step(s) status - Wallet data ######
         active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
+        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
+        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
         # Active - Wallet Data
@@ -405,19 +405,19 @@ class VerifyOwnership(tk.Frame):
 
         # Step(s) status - Wallet data ######
         active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
+        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
         icon_wallet_img = Image.open(resourcePath('icons_Substrate.jpg'))
-        icon_wallet_img = icon_wallet_img.resize((30, 30), Image.ANTIALIAS)
+        icon_wallet_img = icon_wallet_img.resize((30, 30), Image.Resampling.LANCZOS)
         icon_wallet_logo = ImageTk.PhotoImage(icon_wallet_img)
 
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
+        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
         tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
         tick_logo = ImageTk.PhotoImage(tick_img)
 
         # Inactive
@@ -520,15 +520,15 @@ class SubmitSwap(tk.Frame):
 
         # Step(s) status - Wallet data ######
         active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
+        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
+        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
         tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
         tick_logo = ImageTk.PhotoImage(tick_img)
 
         # Inactive
@@ -689,15 +689,15 @@ class Finished(tk.Frame):
 
         # Step(s) status - Wallet data ######
         active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.ANTIALIAS)
+        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         active_dot_logo = ImageTk.PhotoImage(active_dot_img)
 
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.ANTIALIAS)
+        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
         tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.ANTIALIAS)
+        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
         tick_logo = ImageTk.PhotoImage(tick_img)
 
         # Inactive
