@@ -21,6 +21,7 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 ### Prerequisites
 ##### Windows/Mac OS
 [Python 3.8.5](https://www.python.org/downloads/release/python-385/)  
+`pip3 install bsddb3-6.2.9-cp38-cp38-win_amd64.whl` https://www.lfd.uci.edu/~gohlke/pythonlibs/#bsddb3  
 `pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
 
 ##### __Ubuntu 20.04+__
@@ -32,7 +33,7 @@ When testing locally, move contents inside /img into the root folder of main.py 
 
 ### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
-```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --noconsole --icon=img\favicon.ico -n bitgreen-swap-tool --clean```  
+```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-swap-tool --clean```  
 
 ```Set-AuthenticodeSignature -FilePath bitgreen-swap-tool.exe -Certificate (Get-ChildItem Cert:\LocalMachine\My)[1] -Verbose```
 
