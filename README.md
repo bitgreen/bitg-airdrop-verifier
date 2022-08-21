@@ -20,9 +20,14 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 
 
 ### Prerequisites
-##### Windows/Mac OS
-[Python 3.8.5](https://www.python.org/downloads/release/python-385/)  
+[Python 3.8.5](https://www.python.org/downloads/release/python-385/)
+
+##### Windows
 `pip3 install bsddb3-6.2.9-cp38-cp38-win_amd64.whl` https://www.lfd.uci.edu/~gohlke/pythonlibs/#bsddb3  
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
+
+#### Mac OS
+`python3 -m easy_install bsddb3`  
 `pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa`
 
 ##### __Ubuntu 20.04+__
@@ -42,4 +47,4 @@ Ubuntu:
 ```pyinstaller --onefile main.py --add-data "img/*.jpg:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```pyinstaller```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --noconsole --icon=img/favicon.ico -n bitgreen-swap-tool --clean```
