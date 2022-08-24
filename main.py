@@ -224,43 +224,29 @@ class StartPage(tk.Frame):
 
 Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
                                        font=controller.text_style, justify=tk.LEFT,
-                                       wraplength=380, bg='#FFFFFF')
+                                       wraplength=480, bg='#FFFFFF')
         self.startpage_pg01.place(x=285, y=15, )
 
         self.startpage_pg02 = tk.Label(self,
                                        text="""Note the snapshot date for address balances is block XXX (or around 4th May 2021).To receive funds from the swap on the new chain, you must have had a balance at this snapshot date.""",
                                        font=controller.text_style_bold, justify=tk.LEFT,
-                                       wraplength=380, bg='#FFFFFF', fg='#E80000')
-        self.startpage_pg02.place(x=285, y=145, )
+                                       wraplength=480, bg='#FFFFFF', fg='#E80000')
+        self.startpage_pg02.place(x=285, y=165, )
 
         self.before_you_begin = tk.Label(self, text="Before you begin", fg='#00A519', bg='#FFFFFF',
                                          font=controller.title_font)
-        self.before_you_begin.place(x=285, y=220)
+        self.before_you_begin.place(x=285, y=250)
 
         if controller.operating_system != 'posix':
-            self.startpage_pg03 = tk.Label(self, text=u"""Please ensure that:
-            
-            Your BitGreen desktop wallet is open
-        
-            You already have a substrate address for the new chain
-            """, font=controller.text_style, justify=tk.LEFT, wraplength=500, bg='#FFFFFF')
-            self.startpage_pg03.place(x=285, y=265)
+            self.startpage_pg03 = tk.Label(self, text="Please ensure that you already have a substrate address for "
+                                                      "the new chain.", font=controller.text_style, justify=tk.LEFT,
+                                           wraplength=500, bg='#FFFFFF')
+            self.startpage_pg03.place(x=285, y=295)
         else:
-            self.startpage_pg03 = tk.Label(self, text=u"""Please ensure that:
-
-            Your BitGreen desktop wallet is open
-
-            You already have a substrate address for the new chain
-            """, font=controller.text_style, justify=tk.LEFT, wraplength=500, bg='#FFFFFF')
-            self.startpage_pg03.place(x=285, y=275)
-
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=285, y=298)
-
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=285, y=334)
+            self.startpage_pg03 = tk.Label(self, text="Please ensure that you already have a substrate address for "
+                                                      "the new chain.", font=controller.text_style, justify=tk.LEFT,
+                                           wraplength=500, bg='#FFFFFF')
+            self.startpage_pg03.place(x=285, y=295)
 
 
 class WalletData(tk.Frame):
@@ -340,7 +326,7 @@ class WalletData(tk.Frame):
 
         icon_folder = tk.Label(self, image=icon_folder_logo, borderwidth=0, highlightthickness=0)
         icon_folder.image = icon_folder_logo
-        icon_folder.place(x=270, y=170)
+        icon_folder.place(x=270, y=180)
 
         self.walletdir_txtfld = tk.Entry(self, textvariable=controller.shared_data["directory"], bd=2,
                                          relief=tk.GROOVE, font=controller.text_style)
@@ -352,11 +338,11 @@ class WalletData(tk.Frame):
         self.walletdir_txtfld.bind("<FocusOut>",
                                    lambda event, message="Wallet password": handle_focus_out(event, "Directory",
                                                                                              self.walletdir_txtfld))
-        self.walletdir_txtfld.place(x=310, y=170, width=452, height=35)
+        self.walletdir_txtfld.place(x=310, y=180, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_key_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_key_logo
-        icon_key.place(x=270, y=215)
+        icon_key.place(x=270, y=225)
 
         self.passwd_txtfld = tk.Entry(self, textvariable=controller.shared_data["password"], bd=2,
                                       relief=tk.GROOVE, font=controller.text_style)
@@ -367,7 +353,7 @@ class WalletData(tk.Frame):
         self.passwd_txtfld.bind("<FocusOut>",
                                 lambda event, message="Wallet password": handle_focus_out(event, "Wallet password",
                                                                                           self.passwd_txtfld))
-        self.passwd_txtfld.place(x=310, y=215, width=452, height=35)
+        self.passwd_txtfld.place(x=310, y=225, width=452, height=35)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
@@ -461,9 +447,7 @@ class VerifyOwnership(tk.Frame):
 
         self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step.
         
-This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the swap will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.
-
-Enter your preferred Substrate address below.""",
+This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the swap will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.verify_pg01.place(x=270, y=110)
@@ -569,17 +553,20 @@ class SubmitSwap(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.submitswap_pg01 = tk.Label(self, text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.
-
-This will create a file in your wallets block directory called 'substrate-signed.json'.""",
+        self.submitswap_pg01 = tk.Label(self, text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=205, bg='#FFFFFF')
         self.submitswap_pg01.place(x=270, y=100)
 
+        self.submitswap_pg02 = tk.Label(self, text="""This will create a file in your wallets block directory called 'substrate-signed.json'.""",
+                                        font=controller.text_style, justify=tk.LEFT,
+                                        wraplength=340, bg='#FFFFFF')
+        self.submitswap_pg02.place(x=270, y=260)
+
         if controller.operating_system != 'posix':
             # json output
             self.scrollbar = tk.Scrollbar(self)
-            self.t = tk.Text(self, height=12, width=47,
+            self.t = tk.Text(self, height=12, width=48,
                              yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
                              relief="flat", wrap=tk.NONE)
             self.scrollbar.config(command=self.t.yview)
@@ -606,7 +593,7 @@ This will create a file in your wallets block directory called 'substrate-signed
         else:
             # json output
             self.scrollbar = tk.Scrollbar(self)
-            self.t = tk.Text(self, height=20, width=54,
+            self.t = tk.Text(self, height=12, width=48,
                              yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
                              relief="flat", wrap=tk.NONE)
             self.scrollbar.config(command=self.t.yview)
