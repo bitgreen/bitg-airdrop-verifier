@@ -1,5 +1,5 @@
 #### Preview
-![preview.png](img/preview.png)
+![preview.png](img/preview.jpg)
 
 ### Checking application authenticity
 Always check the authenticity of any application you are downloading over the internet. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified/tampered and should match the values below.
