@@ -375,7 +375,8 @@ class WalletData(tk.Frame):
         # Allow user to select a directory and store it in global var
         # called folder_path
         global folder_path
-        filename = filedialog.askdirectory()
+        home = os.path.expanduser('~')
+        filename = filedialog.askdirectory(initialdir=home)
         self.controller.shared_data["directory"].set(filename)
 
     def msgbox(self, title, messge):
