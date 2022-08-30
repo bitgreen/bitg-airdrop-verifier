@@ -459,7 +459,8 @@ class WalletData(tk.Frame):
                 all_keys = w.dump_keys()
                 for keypair in all_keys:
                     if 'private_key' in keypair:
-                        self.controller.shared_data["wallet_key_pairs"].append({'private_key': keypair['private_key'], 'address': keypair['public_key']})
+                        self.controller.shared_data["wallet_key_pairs"].append(
+                            {'private_key': keypair['private_key'], 'address': keypair['public_key']})
 
             if len(self.controller.shared_data["wallet_key_pairs"]) == 0:
                 messagebox.showinfo("Error", f"Invalid password!")
@@ -759,8 +760,12 @@ class SubmitSwap(tk.Frame):
         self.t.insert(tk.END, json.dumps(output, indent=4))
         self.t.configure(state="disabled")
 
-        with open(f"{directory}/substrate-signed.json", "w") as outfile:
-            json.dump(output, outfile, indent=4)
+        if self.controller.operating_system != 'posix':
+            with open(f"{directory}\substrate-signed.json", "w") as outfile:
+                json.dump(output, outfile, indent=4)
+        else:
+            with open(f"{directory}/substrate-signed.json", "w") as outfile:
+                json.dump(output, outfile, indent=4)
 
         self.next_btn["state"] = tk.NORMAL
         messagebox.showinfo("Information", f"substrate-signed.json created in {directory}")
