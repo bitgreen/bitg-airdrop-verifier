@@ -102,10 +102,10 @@ class Walletdat(object):
                     fingerprint = vds.read_uint32()
                     has_keyorigin = vds.read_boolean()
                 self.keymetas.append(
-                        {
-                            "version": version, "createtime": createtime, "hdkeypath": hdkeypath,
-                            "hdmasterkey": hdmasterkey, "fingerprint": fingerprint, "has_keyorigin": has_keyorigin,
-                        }
+                    {
+                        "version": version, "createtime": createtime, "hdkeypath": hdkeypath,
+                        "hdmasterkey": hdmasterkey, "fingerprint": fingerprint, "has_keyorigin": has_keyorigin,
+                    }
                 )
                 for key in self.keypairs:
                     if key.publickey == PublicKey(
@@ -292,13 +292,14 @@ class Walletdat(object):
                         self.decrypter.SetIV(doublesha256(rawkey["publickey"]))
                         dec = self.decrypter.decrypt(
                             rawkey["encrypted_privkey"])
-                        self.keypairs.append(
-                            KeyPair.parse_fromckey(
-                                pubkey=rawkey["publickey"],
-                                privkey=dec,
-                                encryptedkey=rawkey["encrypted_privkey"],
-                                crypted=False,
-                            ))
+                        keypair = KeyPair.parse_fromckey(
+                            pubkey=rawkey["publickey"],
+                            privkey=dec,
+                            encryptedkey=rawkey["encrypted_privkey"],
+                            crypted=False,
+                        )
+                        if keypair:
+                            self.keypairs.append(keypair)
                         self.decrypted = True
 
                     except BaseException:
@@ -319,11 +320,11 @@ class Walletdat(object):
 
 
     def dump_keys(
-        self,
-        filepath: Optional[str] = None,
-        version: Optional[int] = None,
-        privkey_prefix_override: Optional[int] = None,
-        compression_override: Optional[bool] = None,
+            self,
+            filepath: Optional[str] = None,
+            version: Optional[int] = None,
+            privkey_prefix_override: Optional[int] = None,
+            compression_override: Optional[bool] = None,
     ) -> List:
         """ Dump just pubkey:privatekey either as a list, write to a file, or both.
 
@@ -377,10 +378,10 @@ class Walletdat(object):
         return output_list
 
     def dump_all(
-        self,
-        filepath: Optional[str] = None,
-        version: Optional[int] = None,
-        privkey_prefix_override: Optional[int] = None,
+            self,
+            filepath: Optional[str] = None,
+            version: Optional[int] = None,
+            privkey_prefix_override: Optional[int] = None,
     ) -> Dict:
         """ Dump all data from wallet
 
@@ -456,15 +457,15 @@ class Walletdat(object):
 
         z = bytes([prefix])
         pools = [{
-                    "n": p["n"],
-                    "nversion": p["nversion"],
-                    "ntime": datetime.datetime.utcfromtimestamp(
-                        p["ntime"]).isoformat(),
-                    "public_key": base58.b58encode_check(
-                        z +
-                        ripemd160_sha256(
-                            p["publickey"])).decode(),
-                } for p in self.pool]
+            "n": p["n"],
+            "nversion": p["nversion"],
+            "ntime": datetime.datetime.utcfromtimestamp(
+                p["ntime"]).isoformat(),
+            "public_key": base58.b58encode_check(
+                z +
+                ripemd160_sha256(
+                    p["publickey"])).decode(),
+        } for p in self.pool]
         sorted(pools, key=lambda i: (i["n"], i["ntime"]))
         structures["pool"] = pools
         if self.defaultkey is not None:
@@ -605,24 +606,25 @@ class KeyPair(object):
                 )
             else:
                 print("Wrong decryption password")
-                return cls(
-                    rawkey=pubkey,
-                    rawvalue=privkey,
-                    pubkey=pubkey,
-                    sec=sec,
-                    encryptedkey=encryptedkey,
-                    compressed=compress,
-                    privkey=prkey
-                )
+                return False
+                # return cls(
+                #     rawkey=pubkey,
+                #     rawvalue=privkey,
+                #     pubkey=pubkey,
+                #     sec=sec,
+                #     encryptedkey=encryptedkey,
+                #     compressed=compress,
+                #     privkey=prkey
+                # )
 
     def set_keymeta(
-        self,
-        version: int,
-        createtime: int,
-        hdkeypath: Optional[str],
-        hdmasterkey: Optional[str],
-        fingerprint: int,
-        has_keyorigin: bool = False,
+            self,
+            version: int,
+            createtime: int,
+            hdkeypath: Optional[str],
+            hdmasterkey: Optional[str],
+            fingerprint: int,
+            has_keyorigin: bool = False,
     ) -> None:
         """Set keymeta field
 

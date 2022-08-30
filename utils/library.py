@@ -51,7 +51,7 @@ def sign_message(private_key, message, address):
     # sig = signing_key.sign_deterministic(generate_hash(msg_magic(message)), hashfunc=hashlib.sha256)
     sig = signing_key.sign_deterministic(message.encode(), hashfunc=hashlib.sha256)
     return {
-        'address': address.decode(),
+        'address': address if isinstance(address, str) else address.decode(),
         'public_key_compressed': public_key_compressed,
         'signature': base64.b64encode(sig).decode()
     }

@@ -8,6 +8,8 @@ from utils import rpc_module, library, walletlib
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from mnemonic import Mnemonic
+import bip32utils
 import click
 
 try:
@@ -139,9 +141,12 @@ class SwapApplication(tk.Tk):
             self.text_style_bold = tkfont.Font(family='Calibri Light', size=12, weight="bold")
 
         self.shared_data = {
+            "key_pairs": [],
+            "wallet_key_pairs": [],
             "directory": tk.StringVar(),
             "password": tk.StringVar(),
-            "substrate-addr": tk.StringVar()
+            "substrate-addr": tk.StringVar(),
+            "seed-phrase": tk.StringVar(),
         }
 
         self.operating_system = os.name
@@ -163,7 +168,7 @@ class SwapApplication(tk.Tk):
         container.grid_columnconfigure(0, weight=11)
 
         self.frames = {}
-        for F in (StartPage, WalletData, VerifyOwnership, SubmitSwap, Finished):
+        for F in (StartPage, WalletData, SeedPhrase, VerifyOwnership, SubmitSwap, Finished):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -249,6 +254,85 @@ Subsequently you will receive the equivalent funds to your preferred Substrate a
             self.startpage_pg03.place(x=285, y=295)
 
 
+def menu_items(self, controller, active_step):
+    active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
+    active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
+    active_dot_logo = ImageTk.PhotoImage(active_dot_img)
+
+    dot_img = Image.open(resourcePath('icons_Dot.jpg'))
+    dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
+    dot_logo = ImageTk.PhotoImage(dot_img)
+
+    tick_img = Image.open(resourcePath('icons_Tick.jpg'))
+    tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
+    tick_logo = ImageTk.PhotoImage(tick_img)
+
+    wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
+    wallet_data_lbl.place(x=90, y=45)
+    if active_step == 1:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 1:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=45)
+
+    seed_phrase_lbl = tk.Label(self, text="Seed Phrase", bg='#FFFFFF', font=controller.text_style)
+    seed_phrase_lbl.place(x=90, y=110)
+    if active_step == 2:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 2:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=110)
+
+    verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
+    verify_ownership_lbl.place(x=90, y=175)
+    if active_step == 3:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 3:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=175)
+
+    submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
+    submit_to_swap_lbl.place(x=90, y=240)
+    if active_step == 4:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 4:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=240)
+
+    finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
+    finished_lbl.place(x=90, y=305)
+    if active_step == 5:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 5:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=305)
+
+
 class WalletData(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -268,42 +352,7 @@ class WalletData(tk.Frame):
         icon_key_img = icon_key_img.resize((30, 30), Image.Resampling.LANCZOS)
         icon_key_logo = ImageTk.PhotoImage(icon_key_img)
 
-        # Step(s) status - Wallet data ######
-        active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        active_dot_logo = ImageTk.PhotoImage(active_dot_img)
-
-        dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        dot_logo = ImageTk.PhotoImage(dot_img)
-
-        # Active - Wallet Data
-        wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
-        wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = active_dot_logo
-        dot.place(x=40, y=45)
-
-        # Inactive
-        verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-        verify_ownership_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=110)
-
-        # Inactive
-        submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
-        submit_to_swap_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=175)
-
-        # Inactive
-        finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-        finished_lbl.place(x=90, y=240)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=240)
+        menu_items(self, controller, 1)
 
         ## Separate ###############
         separator = ttk.Separator(self, orient='vertical')
@@ -358,14 +407,14 @@ class WalletData(tk.Frame):
         if controller.operating_system != 'posix':
             # Start - WINDOWS
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
-                                      fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
+                                      fg='#FFFFFF', command=self.read_wallet,
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                       bg='#00A519', highlightbackground='#00A519')
             self.next_btn.place(x=630, y=330)
         else:
             # Next - POSIX
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
-                                   fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
+                                   fg='#FFFFFF', command=self.read_wallet,
                                    height=40, width=130, pady=4,
                                    activebackground=('#00A519', '#00A519'),
                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True)
@@ -382,56 +431,150 @@ class WalletData(tk.Frame):
     def msgbox(self, title, messge):
         messagebox.showinfo(title, messge)
 
+    def read_wallet(self):
+        password = self.controller.shared_data["password"].get()
+        directory = self.controller.shared_data["directory"].get()
+
+        self.controller.shared_data["wallet_key_pairs"] = []
+
+        w = False
+        if os.path.isfile(f"{directory}/wallet.dat"):
+            w = walletlib.Walletdat.load(f"{directory}/wallet.dat")
+        elif os.path.isfile(f"{directory}/wallets/wallet.dat"):
+            w = walletlib.Walletdat.load(f"{directory}/wallets/wallet.dat")
+
+        if w:
+            if password != "" and password != "Wallet password":
+                w.parse(passphrase=str(password))
+            else:
+                w.parse()
+            click.echo("Found {} keypairs and {} transactions".format(
+                len(w.keypairs), len(w.txes)))
+
+            if password != "" and password != "Wallet password" and len(w.keypairs) == 0:
+                messagebox.showinfo("Error", f"Invalid password!")
+                return
+
+            if len(w.keypairs) > 0:
+                all_keys = w.dump_keys()
+                for keypair in all_keys:
+                    if 'private_key' in keypair:
+                        self.controller.shared_data["wallet_key_pairs"].append({'private_key': keypair['private_key'], 'address': keypair['public_key']})
+
+            if len(self.controller.shared_data["wallet_key_pairs"]) == 0:
+                messagebox.showinfo("Error", f"Invalid password!")
+                return
+
+        if directory != 'Directory' and len(self.controller.shared_data["wallet_key_pairs"]) == 0:
+            messagebox.showinfo("Error", f"Wallet file not found in provided directory.")
+            return
+
+        self.controller.show_frame("SeedPhrase")
+
+
+class SeedPhrase(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.wallet = Wallet()
+
+        self.folder_path = tk.StringVar()
+        self.entry_content = tk.StringVar()
+
+        menu_items(self, controller, 2)
+
+        ## Separate ###############
+        separator = ttk.Separator(self, orient='vertical')
+        separator.place(relx=0.3, rely=0.1, relwidth=0, relheight=0.8)
+        ###########################
+
+        ## BitGreen - Seed Phrase ############
+        self.step_title = tk.Label(self, text="Seed Phrase", fg='#00A519', bg='#FFFFFF',
+                                   font=controller.title_font)
+        self.step = tk.Label(self, text="STEP 2", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
+        self.step.place(x=270, y=75)
+        self.step_title.place(x=270, y=40)
+        ######################################
+
+        self.seed_pg01 = tk.Label(self, text="If you have wallet seed phrase, enter it here.",
+                                  font=controller.text_style, justify=tk.LEFT,
+                                  wraplength=500, bg='#FFFFFF')
+        self.seed_pg01.place(x=270, y=110)
+
+        self.seed_txtfld = tk.Entry(self, textvariable=controller.shared_data["seed-phrase"],
+                                    bd=2, relief=tk.GROOVE, font=controller.text_style)
+        self.seed_txtfld.config(fg='grey')
+        self.seed_txtfld.insert(0, "Seed Phrase")
+        self.seed_txtfld.bind("<FocusIn>",
+                              lambda event,: handle_focus_in(event, "Seed Phrase", self.seed_txtfld))
+        self.seed_txtfld.bind("<FocusOut>", lambda event, message="Seed Phrase": handle_focus_out(event, "Seed Phrase",
+                                                                                                  self.seed_txtfld))
+        self.seed_txtfld.place(x=270, y=285, width=492, height=35)
+
+        if controller.operating_system != 'posix':
+            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
+                                      fg='#FFFFFF', command=self.check_seed,
+                                      height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                      bg='#00A519', highlightbackground='#00A519')
+            self.next_btn.place(x=630, y=330)
+
+            self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold,
+                                      fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
+                                      height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                      bg='#00A519', highlightbackground='#00A519')
+            self.back_btn.place(x=270, y=330)
+        else:
+            self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
+                                   fg='#FFFFFF', command=self.check_seed,
+                                   height=40, width=130, pady=4,
+                                   activebackground=('#00A519', '#00A519'),
+                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+            self.next_btn.place(x=630, y=330)
+
+            self.back_btn = Button(self, text='BACK', font=controller.text_style_bold,
+                                   fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
+                                   height=40, width=130, pady=4,
+                                   activebackground=('#00A519', '#00A519'),
+                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+            self.back_btn.place(x=270, y=330)
+
+    def check_seed(self):
+        seed_phrase = self.controller.shared_data["seed-phrase"]
+
+        self.controller.shared_data["key_pairs"] = self.controller.shared_data["wallet_key_pairs"]
+
+        if seed_phrase.get() != "" and seed_phrase.get() != "Seed Phrase":
+            mnemon = Mnemonic('english')
+            # validate seed phrase
+            if mnemon.check(seed_phrase.get()):
+                seed = mnemon.to_seed(seed_phrase.get())
+
+                root_key = bip32utils.BIP32Key.fromEntropy(seed)
+                address = root_key.Address()
+                private_key = root_key.WalletImportFormat()
+
+                self.controller.shared_data["key_pairs"].append({'private_key': private_key, 'address': address})
+            else:
+                messagebox.showinfo("Error", f"Invalid seed phrase!")
+                return
+
+        if len(self.controller.shared_data["key_pairs"]) > 0:
+            self.controller.show_frame("VerifyOwnership")
+        else:
+            messagebox.showinfo("Error", f"No accounts found. Please select wallet.dat file or enter your seed phrase.")
+            self.controller.show_frame("WalletData")
+
 
 class VerifyOwnership(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        # Step(s) status - Wallet data ######
-        active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        active_dot_logo = ImageTk.PhotoImage(active_dot_img)
-
         icon_wallet_img = Image.open(resourcePath('icons_Substrate.jpg'))
         icon_wallet_img = icon_wallet_img.resize((30, 30), Image.Resampling.LANCZOS)
         icon_wallet_logo = ImageTk.PhotoImage(icon_wallet_img)
 
-        dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        dot_logo = ImageTk.PhotoImage(dot_img)
-
-        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
-        tick_logo = ImageTk.PhotoImage(tick_img)
-
-        # Inactive
-        wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
-        wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=45)
-
-        # Active - Verify Ownership
-        verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-        verify_ownership_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = active_dot_logo
-        dot.place(x=40, y=110)
-
-        # Inactive
-        submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
-        submit_to_swap_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=175)
-
-        # Inactive
-        finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-        finished_lbl.place(x=90, y=240)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=240)
+        menu_items(self, controller, 3)
 
         ## Separate ###############
         separator = ttk.Separator(self, orient='vertical')
@@ -470,30 +613,39 @@ This both proves that your substrate address 'owns' the BITG addresses on the ol
 
         if controller.operating_system != 'posix':
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
-                                      fg='#FFFFFF', command=lambda: controller.show_frame("SubmitSwap"),
+                                      fg='#FFFFFF', command=self.verify_substrate_address,
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                       bg='#00A519', highlightbackground='#00A519')
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold,
-                                      fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
+                                      fg='#FFFFFF', command=lambda: controller.show_frame("SeedPhrase"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                       bg='#00A519', highlightbackground='#00A519')
             self.back_btn.place(x=270, y=330)
         else:
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
-                                   fg='#FFFFFF', command=lambda: controller.show_frame("SubmitSwap"),
+                                   fg='#FFFFFF', command=self.verify_substrate_address,
                                    height=40, width=130, pady=4,
                                    activebackground=('#00A519', '#00A519'),
                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold,
-                                   fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
+                                   fg='#FFFFFF', command=lambda: controller.show_frame("SeedPhrase"),
                                    height=40, width=130, pady=4,
                                    activebackground=('#00A519', '#00A519'),
                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True)
             self.back_btn.place(x=270, y=330)
+
+    def verify_substrate_address(self):
+        message = self.controller.shared_data["substrate-addr"].get()
+
+        if message == 'Substrate address' or message == '':
+            messagebox.showinfo("Error", "You must specify a valid substrate address.")
+            return
+
+        self.controller.show_frame("SubmitSwap")
 
 
 class SubmitSwap(tk.Frame):
@@ -501,46 +653,7 @@ class SubmitSwap(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        # Step(s) status - Wallet data ######
-        active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        active_dot_logo = ImageTk.PhotoImage(active_dot_img)
-
-        dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        dot_logo = ImageTk.PhotoImage(dot_img)
-
-        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
-        tick_logo = ImageTk.PhotoImage(tick_img)
-
-        # Inactive
-        wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
-        wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=45)
-
-        # Inactive
-        verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-        verify_ownership_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=110)
-
-        # Active - Submit to swap
-        submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
-        submit_to_swap_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = active_dot_logo
-        dot.place(x=40, y=175)
-
-        # Inactive
-        finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-        finished_lbl.place(x=90, y=240)
-        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = dot_logo
-        dot.place(x=40, y=240)
+        menu_items(self, controller, 4)
 
         ## Separate ###############
         separator = ttk.Separator(self, orient='vertical')
@@ -554,12 +667,14 @@ class SubmitSwap(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.submitswap_pg01 = tk.Label(self, text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
+        self.submitswap_pg01 = tk.Label(self,
+                                        text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=205, bg='#FFFFFF')
         self.submitswap_pg01.place(x=270, y=100)
 
-        self.submitswap_pg02 = tk.Label(self, text="""This will create a file in your wallets block directory called 'substrate-signed.json'.""",
+        self.submitswap_pg02 = tk.Label(self,
+                                        text="""This will create a file in your wallets block directory called 'substrate-signed.json'.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=340, bg='#FFFFFF')
         self.submitswap_pg02.place(x=270, y=260)
@@ -625,39 +740,19 @@ class SubmitSwap(tk.Frame):
 
     def submit2swap(self):
         message = self.controller.shared_data["substrate-addr"].get()
+        directory = self.controller.shared_data["directory"].get()
 
         if message == 'Substrate address' or message == '':
             messagebox.showinfo("Error", "You must specify a substrate address")
             return
-
-        password = self.controller.shared_data["password"].get()
-        directory = self.controller.shared_data["directory"].get()
-
-        if os.path.isfile(f"{directory}/wallet.dat"):
-            w = walletlib.Walletdat.load(f"{directory}/wallet.dat")
-        elif os.path.isfile(f"{directory}/wallets/wallet.dat"):
-            w = walletlib.Walletdat.load(f"{directory}/wallets/wallet.dat")
-        else:
-            messagebox.showinfo("Error", "Invalid wallet path specified. No wallet found.")
-            return
-
-        click.echo("Loaded file")
-        if password:
-            w.parse(passphrase=str(password))
-        else:
-            w.parse()
-        click.echo("Found {} keypairs and {} transactions".format(
-            len(w.keypairs), len(w.txes)))
-        click.echo("Default version byte: {}".format(w.default_wifnetwork))
 
         output = {
             'old_addresses': [],
             'substrate_address': message
         }
 
-        all_keys = w.dump_keys()
-        for keypair in all_keys:
-            output['old_addresses'].append(library.sign_message(keypair['private_key'], message, keypair['public_key']))
+        for keypair in self.controller.shared_data["key_pairs"]:
+            output['old_addresses'].append(library.sign_message(keypair['private_key'], message, keypair['address']))
 
         self.t.configure(state="normal")
         self.t.delete(1.0, tk.END)
@@ -677,46 +772,7 @@ class Finished(tk.Frame):
         self.controller = controller
         address = self.controller.shared_data["substrate-addr"].get()
 
-        # Step(s) status - Wallet data ######
-        active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
-        active_dot_img = active_dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        active_dot_logo = ImageTk.PhotoImage(active_dot_img)
-
-        dot_img = Image.open(resourcePath('icons_Dot.jpg'))
-        dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
-        dot_logo = ImageTk.PhotoImage(dot_img)
-
-        tick_img = Image.open(resourcePath('icons_Tick.jpg'))
-        tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
-        tick_logo = ImageTk.PhotoImage(tick_img)
-
-        # Inactive
-        wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
-        wallet_data_lbl.place(x=90, y=45)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=45)
-
-        # Inactive
-        verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-        verify_ownership_lbl.place(x=90, y=110)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=110)
-
-        # Inactive
-        submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
-        submit_to_swap_lbl.place(x=90, y=175)
-        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
-        dot.image = tick_logo
-        dot.place(x=40, y=175)
-
-        # Active - Finished
-        finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-        finished_lbl.place(x=90, y=240)
-        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
-        dot.image = active_dot_logo
-        dot.place(x=40, y=240)
+        menu_items(self, controller, 5)
 
         ## Separate ###############
         separator = ttk.Separator(self, orient='vertical')
