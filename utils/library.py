@@ -45,7 +45,6 @@ def address_p2pkh_address(public_key):
 
 def generate_p2sh_address(public_key):
     prefix_redeem = b'\x00\x14'
-    # prefix_redeem = b'\x00'
     redeem_script = hash160(prefix_redeem + hash160(public_key).digest()).digest()  # 20 bytes
     m = b'\x06' + redeem_script
     c = doublehash256(m).digest()[:4]

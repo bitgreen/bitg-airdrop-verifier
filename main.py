@@ -1,6 +1,6 @@
 import sys
 import json
-import os.path
+import os
 from sys import exit
 from tkinter import ttk
 from tkmacosx import Button
@@ -11,6 +11,9 @@ from PIL import Image, ImageTk
 from mnemonic import Mnemonic
 import bip32utils
 import click
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 try:
     import tkinter as tk  # python 3
@@ -760,15 +763,15 @@ class SubmitSwap(tk.Frame):
         self.t.insert(tk.END, json.dumps(output, indent=4))
         self.t.configure(state="disabled")
 
-        # if self.controller.operating_system != 'posix':
-        #     with open(f"{directory}\substrate-signed.json", "w") as outfile:
-        #         json.dump(output, outfile, indent=4)
-        # else:
-        #     with open(f"{directory}/substrate-signed.json", "w") as outfile:
-        #         json.dump(output, outfile, indent=4)
-
-        self.next_btn["state"] = tk.NORMAL
-        # messagebox.showinfo("Information", f"substrate-signed.json created in {directory}")
+        output['api_secret'] = os.getenv('SERVER_API_KEY')
+        url = os.getenv('SERVER_API_URL') + '/claim-addresses'
+        r = requests.post(url, json=output)
+        result = r.json()
+        if result['status']:
+            self.next_btn["state"] = tk.NORMAL
+            messagebox.showinfo("Information", f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
+        else:
+            messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
 
 class Finished(tk.Frame):
