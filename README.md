@@ -24,15 +24,18 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 
 ##### Windows
 `pip3 install bsddb3-6.2.9-cp38-cp38-win_amd64.whl` https://www.lfd.uci.edu/~gohlke/pythonlibs/#bsddb3  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
 
 #### Mac OS
 `python3 -m easy_install bsddb3`  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
 
 ##### __Ubuntu 20.04+__
 `sudo apt install python3-pip python3-tk python3-pil.imagetk`  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
+
+## Setup .env
+Copy `.env.example` to `.env` and edit env variables.
 
 ### Local testing
 When testing locally, move contents inside /img into the root folder of main.py before invoking `python3 main.py` or `py .\main.py` for windows user.

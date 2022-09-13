@@ -1,6 +1,6 @@
 import sys
 import json
-import os.path
+import os
 from sys import exit
 from tkinter import ttk
 from tkmacosx import Button
@@ -11,6 +11,9 @@ from PIL import Image, ImageTk
 from mnemonic import Mnemonic
 import bip32utils
 import click
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 try:
     import tkinter as tk  # python 3
@@ -368,30 +371,30 @@ class WalletData(tk.Frame):
         ######################################
 
         self.walletdata_pg01 = tk.Label(self,
-                                        text="""Select the directory where your BitGreen wallet data is located. If you have encrypted your wallet, enter the password to unlock it on the next step.""",
+                                        text="""Select the directory where your BitGreen wallet data is located. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
         self.walletdata_pg01.place(x=270, y=110)
 
         icon_folder = tk.Label(self, image=icon_folder_logo, borderwidth=0, highlightthickness=0)
         icon_folder.image = icon_folder_logo
-        icon_folder.place(x=270, y=180)
+        icon_folder.place(x=270, y=200)
 
         self.walletdir_txtfld = tk.Entry(self, textvariable=controller.shared_data["directory"], bd=2,
                                          relief=tk.GROOVE, font=controller.text_style)
         self.walletdir_txtfld.config(fg='grey')
-        self.walletdir_txtfld.insert(0, "Directory")
+        self.walletdir_txtfld.insert(0, "Wallet file")
         self.walletdir_txtfld.bind("<Button-1>", self.walletdir)
         self.walletdir_txtfld.bind("<FocusIn>",
-                                   lambda event,: handle_focus_in(event, "Directory", self.walletdir_txtfld))
+                                   lambda event,: handle_focus_in(event, "Wallet file", self.walletdir_txtfld))
         self.walletdir_txtfld.bind("<FocusOut>",
-                                   lambda event, message="Wallet password": handle_focus_out(event, "Directory",
+                                   lambda event, message="Wallet password": handle_focus_out(event, "Wallet file",
                                                                                              self.walletdir_txtfld))
-        self.walletdir_txtfld.place(x=310, y=180, width=452, height=35)
+        self.walletdir_txtfld.place(x=310, y=200, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_key_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_key_logo
-        icon_key.place(x=270, y=225)
+        icon_key.place(x=270, y=245)
 
         self.passwd_txtfld = tk.Entry(self, textvariable=controller.shared_data["password"], bd=2,
                                       relief=tk.GROOVE, font=controller.text_style)
@@ -402,7 +405,7 @@ class WalletData(tk.Frame):
         self.passwd_txtfld.bind("<FocusOut>",
                                 lambda event, message="Wallet password": handle_focus_out(event, "Wallet password",
                                                                                           self.passwd_txtfld))
-        self.passwd_txtfld.place(x=310, y=225, width=452, height=35)
+        self.passwd_txtfld.place(x=310, y=245, width=452, height=35)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
@@ -425,7 +428,8 @@ class WalletData(tk.Frame):
         # called folder_path
         global folder_path
         home = os.path.expanduser('~')
-        filename = filedialog.askdirectory(initialdir=home)
+        # filename = filedialog.askdirectory(initialdir=home)
+        filename = filedialog.askopenfilename(filetypes=[("Wallet file", "*.dat")], initialdir=home)
         self.controller.shared_data["directory"].set(filename)
 
     def msgbox(self, title, messge):
@@ -438,10 +442,8 @@ class WalletData(tk.Frame):
         self.controller.shared_data["wallet_key_pairs"] = []
 
         w = False
-        if os.path.isfile(f"{directory}/wallet.dat"):
-            w = walletlib.Walletdat.load(f"{directory}/wallet.dat")
-        elif os.path.isfile(f"{directory}/wallets/wallet.dat"):
-            w = walletlib.Walletdat.load(f"{directory}/wallets/wallet.dat")
+        if os.path.isfile(f"{directory}"):
+            w = walletlib.Walletdat.load(f"{directory}")
 
         if w:
             if password != "" and password != "Wallet password":
@@ -466,8 +468,8 @@ class WalletData(tk.Frame):
                 messagebox.showinfo("Error", f"Invalid password!")
                 return
 
-        if directory != 'Directory' and len(self.controller.shared_data["wallet_key_pairs"]) == 0:
-            messagebox.showinfo("Error", f"Wallet file not found in provided directory.")
+        if directory != 'Wallet file' and len(self.controller.shared_data["wallet_key_pairs"]) == 0:
+            messagebox.showinfo("Error", f"Wallet file not found!.")
             return
 
         self.controller.show_frame("SeedPhrase")
@@ -555,6 +557,7 @@ class SeedPhrase(tk.Frame):
                 private_key = root_key.WalletImportFormat()
 
                 self.controller.shared_data["key_pairs"].append({'private_key': private_key, 'address': address})
+                click.echo(private_key)
             else:
                 messagebox.showinfo("Error", f"Invalid seed phrase!")
                 return
@@ -675,7 +678,7 @@ class SubmitSwap(tk.Frame):
         self.submitswap_pg01.place(x=270, y=100)
 
         self.submitswap_pg02 = tk.Label(self,
-                                        text="""This will create a file in your wallets block directory called 'substrate-signed.json'.""",
+                                        text="""This will sign new substrate address with each keypair provided.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=340, bg='#FFFFFF')
         self.submitswap_pg02.place(x=270, y=260)
@@ -753,22 +756,22 @@ class SubmitSwap(tk.Frame):
         }
 
         for keypair in self.controller.shared_data["key_pairs"]:
-            output['old_addresses'].append(library.sign_message(keypair['private_key'], message, keypair['address']))
+            output['old_addresses'].append(library.sign_message(keypair['private_key'], message))
 
         self.t.configure(state="normal")
         self.t.delete(1.0, tk.END)
         self.t.insert(tk.END, json.dumps(output, indent=4))
         self.t.configure(state="disabled")
 
-        if self.controller.operating_system != 'posix':
-            with open(f"{directory}\substrate-signed.json", "w") as outfile:
-                json.dump(output, outfile, indent=4)
+        output['api_secret'] = os.getenv('SERVER_API_KEY')
+        url = os.getenv('SERVER_API_URL') + '/claim-addresses'
+        r = requests.post(url, json=output)
+        result = r.json()
+        if result['status']:
+            self.next_btn["state"] = tk.NORMAL
+            messagebox.showinfo("Information", f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
         else:
-            with open(f"{directory}/substrate-signed.json", "w") as outfile:
-                json.dump(output, outfile, indent=4)
-
-        self.next_btn["state"] = tk.NORMAL
-        messagebox.showinfo("Information", f"substrate-signed.json created in {directory}")
+            messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
 
 class Finished(tk.Frame):

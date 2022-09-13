@@ -3,6 +3,7 @@ import base58
 import base64
 import codecs
 import hashlib
+from utils import segwit_address
 
 
 def compress_public_key(public_key):
@@ -13,24 +14,55 @@ def compress_public_key(public_key):
     return public_key_compressed
 
 
-def msg_magic(message):
-    return "BitGreen Signed Message:\n" + message
-
-
-def generate_hash(data):
-    return hashlib.sha256(hashlib.sha256(data.encode()).digest()).digest().hex().encode()
-
-
-def hash_160(hex_str):
+def hash160(hex_str):
     sha = hashlib.sha256()
     rip = hashlib.new('ripemd160')
-    sha.update(hex_str)
+    if type(hex_str) == bytes:
+        sha.update(bytearray(hex_str))
+    else:
+        sha.update(bytearray.fromhex(hex_str))
     rip.update(sha.digest())
-    print("key_hash = \t" + rip.hexdigest())
-    return rip.hexdigest()  # .hexdigest() is hex ASCII
+    return rip
 
 
-def sign_message(private_key, message, address):
+def doublehash256(hex_str):
+    sha = hashlib.sha256()
+    if type(hex_str) == bytes:
+        sha.update(bytearray(hex_str))
+    else:
+        sha.update(bytearray.fromhex(hex_str))
+    checksum = sha.digest()
+    sha = hashlib.sha256()
+    sha.update(checksum)
+    return sha
+
+
+def address_p2pkh_address(public_key):
+    key_hash = '26' + hash160(public_key).hexdigest()
+    checksum = doublehash256(key_hash).hexdigest()[0:8]
+    return base58.b58encode(bytes(bytearray.fromhex(key_hash + checksum))).decode('utf-8')
+
+
+def generate_p2sh_address(public_key):
+    prefix_redeem = b'\x00\x14'
+    redeem_script = hash160(prefix_redeem + hash160(public_key).digest()).digest()  # 20 bytes
+    m = b'\x06' + redeem_script
+    c = doublehash256(m).digest()[:4]
+    return base58.b58encode(m + c).decode('utf-8')
+
+
+def generate_bech32_address(public_key):
+    redeem_script_p2_wpkh = hash160(public_key).digest()
+    return str(segwit_address.encode('bg', 0x00, redeem_script_p2_wpkh))
+
+
+def checksum(v):
+    checksum_size = 4
+    return doublehash256(v).digest()[:checksum_size]
+
+
+def sign_message(private_key, message):
+    wif_private_key = str(private_key)
     private_key = base58.b58decode(private_key).hex()
     if len(private_key) == 76:
         # compressed private key, drop first byte, and last 4+1 bytes
@@ -42,17 +74,20 @@ def sign_message(private_key, message, address):
     signing_key = ecdsa.SigningKey.from_string(codecs.decode(private_key, 'hex'),
                                                hashfunc=hashlib.sha256,
                                                curve=ecdsa.SECP256k1)
+
     verifying_key = signing_key.get_verifying_key().to_string().hex()
     # print(verifying_key)
 
     public_key_compressed = compress_public_key(verifying_key)
     # print(public_key_compressed)
 
-    # sig = signing_key.sign_deterministic(generate_hash(msg_magic(message)), hashfunc=hashlib.sha256)
     sig = signing_key.sign_deterministic(message.encode(), hashfunc=hashlib.sha256)
     return {
-        'address': address if isinstance(address, str) else address.decode(),
+        'public_key': verifying_key,
         'public_key_compressed': public_key_compressed,
+        'address_p2pkh': address_p2pkh_address(public_key_compressed),
+        'address_p2sh': generate_p2sh_address(public_key_compressed),
+        'address_bech32': generate_bech32_address(public_key_compressed),
         'signature': base64.b64encode(sig).decode()
     }
 
