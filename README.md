@@ -42,12 +42,12 @@ When testing locally, move contents inside /img into the root folder of main.py 
 
 ### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
-```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-swap-tool --clean```  
+```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --add-data ".env;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-swap-tool --clean```  
 
 ```Set-AuthenticodeSignature -FilePath bitgreen-swap-tool.exe -Certificate (Get-ChildItem Cert:\LocalMachine\My)[1] -Verbose```
 
 Ubuntu:  
-```pyinstaller --onefile main.py --add-data "img/*.jpg:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
+```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data ".env:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
 ```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-swap-tool --clean```

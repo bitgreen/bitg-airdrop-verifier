@@ -1,5 +1,4 @@
 import sys
-import json
 import os
 from sys import exit
 from tkinter import ttk
@@ -13,13 +12,11 @@ import bip32utils
 import click
 import requests
 from dotenv import load_dotenv
-if sys.platform == "darwin":
-    extDataDir = os.getcwd()
-    if getattr(sys, 'frozen', False):
-        extDataDir = sys._MEIPASS
-    load_dotenv(dotenv_path=os.path.join(extDataDir, '.env'))
-else:
-    load_dotenv()
+
+extDataDir = os.getcwd()
+if getattr(sys, 'frozen', False):
+    extDataDir = sys._MEIPASS
+load_dotenv(dotenv_path=os.path.join(extDataDir, '.env'))
 
 try:
     import tkinter as tk  # python 3
