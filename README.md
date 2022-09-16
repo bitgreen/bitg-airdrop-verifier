@@ -24,15 +24,15 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 
 ##### Windows
 `pip3 install bsddb3-6.2.9-cp38-cp38-win_amd64.whl` https://www.lfd.uci.edu/~gohlke/pythonlibs/#bsddb3  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils python-dotenv`
 
 #### Mac OS
 `python3 -m easy_install bsddb3`  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils python-dotenv`
 
 ##### __Ubuntu 20.04+__
 `sudo apt install python3-pip python3-tk python3-pil.imagetk`  
-`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils load_dotenv`
+`pip3 install requests pillow tkmacosx pyinstaller walletlib ecdsa mnemonic bip32utils python-dotenv`
 
 ## Setup .env
 Copy `.env.example` to `.env` and edit env variables.
@@ -50,4 +50,4 @@ Ubuntu:
 ```pyinstaller --onefile main.py --add-data "img/*.jpg:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --noconsole --icon=img/favicon.ico -n bitgreen-swap-tool --clean```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-swap-tool --clean```

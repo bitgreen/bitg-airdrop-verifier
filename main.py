@@ -13,7 +13,13 @@ import bip32utils
 import click
 import requests
 from dotenv import load_dotenv
-load_dotenv()
+if sys.platform == "darwin":
+    extDataDir = os.getcwd()
+    if getattr(sys, 'frozen', False):
+        extDataDir = sys._MEIPASS
+    load_dotenv(dotenv_path=os.path.join(extDataDir, '.env'))
+else:
+    load_dotenv()
 
 try:
     import tkinter as tk  # python 3
@@ -674,25 +680,16 @@ class SubmitSwap(tk.Frame):
         self.submitswap_pg01 = tk.Label(self,
                                         text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
                                         font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=205, bg='#FFFFFF')
+                                        wraplength=500, bg='#FFFFFF')
         self.submitswap_pg01.place(x=270, y=100)
 
         self.submitswap_pg02 = tk.Label(self,
                                         text="""This will sign new substrate address with each keypair provided.""",
                                         font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=340, bg='#FFFFFF')
-        self.submitswap_pg02.place(x=270, y=260)
+                                        wraplength=500, bg='#FFFFFF')
+        self.submitswap_pg02.place(x=270, y=220)
 
         if controller.operating_system != 'posix':
-            # json output
-            self.scrollbar = tk.Scrollbar(self)
-            self.t = tk.Text(self, height=12, width=48,
-                             yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
-                             relief="flat", wrap=tk.NONE)
-            self.scrollbar.config(command=self.t.yview)
-            self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-            self.t.place(x=480, y=100)
-
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
                                         fg='#FFFFFF', command=self.submit2swap,
                                         width=8, pady=2, relief=tk.GROOVE, border=0,
@@ -711,15 +708,6 @@ class SubmitSwap(tk.Frame):
                                       bg='#00A519', highlightbackground='#00A519')
             self.back_btn.place(x=270, y=330)
         else:
-            # json output
-            self.scrollbar = tk.Scrollbar(self)
-            self.t = tk.Text(self, height=12, width=48,
-                             yscrollcommand=self.scrollbar.set, font=("Helvetica", 8),
-                             relief="flat", wrap=tk.NONE)
-            self.scrollbar.config(command=self.t.yview)
-            self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-            self.t.place(x=480, y=100)
-
             self.submit_btn = Button(self, text='SIGN', font=controller.text_style_bold,
                                      fg='#FFFFFF', command=self.submit2swap,
                                      height=40, width=130, pady=4,
@@ -744,7 +732,6 @@ class SubmitSwap(tk.Frame):
 
     def submit2swap(self):
         message = self.controller.shared_data["substrate-addr"].get()
-        directory = self.controller.shared_data["directory"].get()
 
         if message == 'Substrate address' or message == '':
             messagebox.showinfo("Error", "You must specify a substrate address")
@@ -757,11 +744,6 @@ class SubmitSwap(tk.Frame):
 
         for keypair in self.controller.shared_data["key_pairs"]:
             output['old_addresses'].append(library.sign_message(keypair['private_key'], message))
-
-        self.t.configure(state="normal")
-        self.t.delete(1.0, tk.END)
-        self.t.insert(tk.END, json.dumps(output, indent=4))
-        self.t.configure(state="disabled")
 
         output['api_secret'] = os.getenv('SERVER_API_KEY')
         url = os.getenv('SERVER_API_URL') + '/claim-addresses'
