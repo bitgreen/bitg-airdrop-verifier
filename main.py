@@ -139,12 +139,14 @@ class SwapApplication(tk.Tk):
             self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
             self.title_font_step = tkfont.Font(family='Calibri light', size=11, weight="bold")
             self.text_style = tkfont.Font(family='Calibri light', size=11, weight="normal")
+            self.text_style_small = tkfont.Font(family='Calibri light', size=9, weight="normal")
             self.text_style_bold = tkfont.Font(family='Calibri Light', size=11, weight="bold")
         else:
             # Mac OS font specifications
             self.title_font = tkfont.Font(family='Calibri light', size=24, weight="normal")
             self.title_font_step = tkfont.Font(family='Calibri light', size=12, weight="bold")
             self.text_style = tkfont.Font(family='Calibri light', size=12, weight="normal")
+            self.text_style_small = tkfont.Font(family='Calibri light', size=10, weight="normal")
             self.text_style_bold = tkfont.Font(family='Calibri Light', size=12, weight="bold")
 
         self.shared_data = {
@@ -377,14 +379,39 @@ class WalletData(tk.Frame):
         ######################################
 
         self.walletdata_pg01 = tk.Label(self,
-                                        text="""Select the directory where your Bitgreen wallet data is located. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
+                                        text="""Select Bitgreen wallet data file. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
         self.walletdata_pg01.place(x=270, y=110)
 
+        self.walletdata_pg02 = tk.Label(self,
+                                        text="""Please make a backup of your wallet.dat file before you continue to use for this process and copy it to a different location. You might have to activate hidden files to reach it.""",
+                                        font=controller.text_style, justify=tk.LEFT,
+                                        wraplength=500, bg='#FFFFFF')
+        self.walletdata_pg02.place(x=270, y=170)
+
+        if sys.platform == "linux":
+            self.walletdata_pg03 = tk.Label(self,
+                                            text="""Default path: ~/.bitgreen/""",
+                                            font=controller.text_style_small, justify=tk.LEFT,
+                                            wraplength=500, bg='#FFFFFF')
+            self.walletdata_pg03.place(x=270, y=340)
+        elif sys.platform == "darwin":
+            self.walletdata_pg03 = tk.Label(self,
+                                            text="""Default path: ~/Library/Application Support/Bitgreen/""",
+                                            font=controller.text_style_small, justify=tk.LEFT,
+                                            wraplength=500, bg='#FFFFFF')
+            self.walletdata_pg03.place(x=270, y=340)
+        elif sys.platform == "windows":
+            self.walletdata_pg03 = tk.Label(self,
+                                            text="""Go to Start -> Run and enter \"%APPDATA%\Bitgreen\"""",
+                                            font=controller.text_style_small, justify=tk.LEFT,
+                                            wraplength=500, bg='#FFFFFF')
+            self.walletdata_pg03.place(x=270, y=340)
+
         icon_folder = tk.Label(self, image=icon_folder_logo, borderwidth=0, highlightthickness=0)
         icon_folder.image = icon_folder_logo
-        icon_folder.place(x=270, y=200)
+        icon_folder.place(x=270, y=245)
 
         self.walletdir_txtfld = tk.Entry(self, textvariable=controller.shared_data["directory"], bd=2, cursor="hand2",
                                          relief=tk.GROOVE, font=controller.text_style)
@@ -396,11 +423,11 @@ class WalletData(tk.Frame):
         self.walletdir_txtfld.bind("<FocusOut>",
                                    lambda event, message="Wallet password": handle_focus_out(event, "Wallet file",
                                                                                              self.walletdir_txtfld))
-        self.walletdir_txtfld.place(x=310, y=200, width=452, height=35)
+        self.walletdir_txtfld.place(x=310, y=245, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_key_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_key_logo
-        icon_key.place(x=270, y=245)
+        icon_key.place(x=270, y=290)
 
         self.passwd_txtfld = tk.Entry(self, textvariable=controller.shared_data["password"], bd=2,
                                       relief=tk.GROOVE, font=controller.text_style)
@@ -411,7 +438,7 @@ class WalletData(tk.Frame):
         self.passwd_txtfld.bind("<FocusOut>",
                                 lambda event, message="Wallet password": handle_focus_out(event, "Wallet password",
                                                                                           self.passwd_txtfld))
-        self.passwd_txtfld.place(x=310, y=245, width=452, height=35)
+        self.passwd_txtfld.place(x=310, y=290, width=452, height=35)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
@@ -696,7 +723,8 @@ class SubmitSwap(tk.Frame):
                                         wraplength=500, bg='#FFFFFF')
         self.submitswap_pg02.place(x=270, y=190)
 
-        self.c1 = tk.Checkbutton(self, text='I have read and accept Terms and Conditions', variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
+        self.c1 = tk.Checkbutton(self, text='I have read and accept Terms and Conditions',
+                                 variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
                                  onvalue=True, offvalue=False, font=controller.text_style, borderwidth=0,
                                  bg="#fff", activebackground="#fff",
                                  highlightthickness=0, relief=tk.GROOVE)
@@ -704,7 +732,8 @@ class SubmitSwap(tk.Frame):
         self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
                                              fg='#00A519', cursor="hand2", font=controller.text_style)
         self.terms_and_conditions.place(x=485, y=239)
-        self.terms_and_conditions.bind("<Button-1>", lambda e: webbrowser.open_new("https://airdrop.bitgreenswiss.org/tos"))
+        self.terms_and_conditions.bind("<Button-1>",
+                                       lambda e: webbrowser.open_new("https://airdrop.bitgreenswiss.org/tos"))
 
         if controller.operating_system != 'posix':
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
