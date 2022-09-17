@@ -11,7 +11,7 @@ e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
 CertUtil: -hashfile command completed successfully.
 ```
 
-**Mac OS:** `shasum -a 1 bitgreen-swap-tool`
+**Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier`
 ```
 d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 ```
@@ -42,12 +42,10 @@ When testing locally, move contents inside /img into the root folder of main.py 
 
 ### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
-```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --add-data ".env;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-swap-tool --clean```  
-
-```Set-AuthenticodeSignature -FilePath bitgreen-swap-tool.exe -Certificate (Get-ChildItem Cert:\LocalMachine\My)[1] -Verbose```
+```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --add-data ".env;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-airdrop-verifier --clean```  
 
 Ubuntu:  
-```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data ".env:." --noconsole -n bitgreen-swap-tool --clean --hidden-import='PIL._tkinter_finder'```
+```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data ".env:." --noconsole -n bitgreen-airdrop-verifier --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-swap-tool --clean```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean```

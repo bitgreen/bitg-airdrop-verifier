@@ -231,7 +231,7 @@ class StartPage(tk.Frame):
                                     activeforeground='#FFFFFF', bg='#00A519', borderless=True)
             self.start_btn.place(x=85, y=275)
 
-        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current BitGreen wallet, and to prove your ownership of those addresses to submit to the swap process.
+        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current Bitgreen wallet, and to prove your ownership of those addresses to submit to the airdrop process.
 
 Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
                                        font=controller.text_style, justify=tk.LEFT,
@@ -239,7 +239,7 @@ Subsequently you will receive the equivalent funds to your preferred Substrate a
         self.startpage_pg01.place(x=285, y=15, )
 
         self.startpage_pg02 = tk.Label(self,
-                                       text="""Note the snapshot date for address balances is block XXX (or around 4th May 2021).To receive funds from the swap on the new chain, you must have had a balance at this snapshot date.""",
+                                       text="""Note the snapshot date for address balances is block 483250 (or around 26th October 2021).To receive funds from the airdrop on the new chain, you must have had a balance at this snapshot date.""",
                                        font=controller.text_style_bold, justify=tk.LEFT,
                                        wraplength=480, bg='#FFFFFF', fg='#E80000')
         self.startpage_pg02.place(x=285, y=165, )
@@ -274,7 +274,7 @@ def menu_items(self, controller, active_step):
     tick_logo = ImageTk.PhotoImage(tick_img)
 
     wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
-    wallet_data_lbl.place(x=90, y=45)
+    wallet_data_lbl.place(x=90, y=50)
     if active_step == 1:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -287,7 +287,7 @@ def menu_items(self, controller, active_step):
     dot.place(x=40, y=45)
 
     seed_phrase_lbl = tk.Label(self, text="Seed Phrase", bg='#FFFFFF', font=controller.text_style)
-    seed_phrase_lbl.place(x=90, y=110)
+    seed_phrase_lbl.place(x=90, y=115)
     if active_step == 2:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -300,7 +300,7 @@ def menu_items(self, controller, active_step):
     dot.place(x=40, y=110)
 
     verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-    verify_ownership_lbl.place(x=90, y=175)
+    verify_ownership_lbl.place(x=90, y=180)
     if active_step == 3:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -312,8 +312,8 @@ def menu_items(self, controller, active_step):
         dot.image = dot_logo
     dot.place(x=40, y=175)
 
-    submit_to_swap_lbl = tk.Label(self, text="Submit to swap", bg='#FFFFFF', font=controller.text_style)
-    submit_to_swap_lbl.place(x=90, y=240)
+    submit_to_swap_lbl = tk.Label(self, text="Submit", bg='#FFFFFF', font=controller.text_style)
+    submit_to_swap_lbl.place(x=90, y=245)
     if active_step == 4:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -326,7 +326,7 @@ def menu_items(self, controller, active_step):
     dot.place(x=40, y=240)
 
     finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-    finished_lbl.place(x=90, y=305)
+    finished_lbl.place(x=90, y=310)
     if active_step == 5:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -366,15 +366,15 @@ class WalletData(tk.Frame):
         ###########################
 
         ## BitGreen - Wallet Data ############
-        self.step_title = tk.Label(self, text="BitGreen wallet data", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Bitgreen wallet data", fg='#00A519', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 1", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
-        self.step.place(x=270, y=75)
+        self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
         self.walletdata_pg01 = tk.Label(self,
-                                        text="""Select the directory where your BitGreen wallet data is located. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
+                                        text="""Select the directory where your Bitgreen wallet data is located. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
         self.walletdata_pg01.place(x=270, y=110)
@@ -498,7 +498,7 @@ class SeedPhrase(tk.Frame):
         self.step_title = tk.Label(self, text="Seed Phrase", fg='#00A519', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 2", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
-        self.step.place(x=270, y=75)
+        self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
@@ -592,13 +592,13 @@ class VerifyOwnership(tk.Frame):
         self.step_title = tk.Label(self, text="Verify Ownership", fg='#00A519', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 3", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
-        self.step.place(x=270, y=75)
+        self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
         self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step.
         
-This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the swap will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
+This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.verify_pg01.place(x=270, y=110)
@@ -668,9 +668,9 @@ class SubmitSwap(tk.Frame):
         ###########################
 
         ## BitGreen - Verify Ownership ############
-        self.step_title = tk.Label(self, text="Submit to swap", fg='#00A519', bg='#FFFFFF', font=controller.title_font)
+        self.step_title = tk.Label(self, text="Submit for airdrop", fg='#00A519', bg='#FFFFFF', font=controller.title_font)
         self.step = tk.Label(self, text="STEP 4", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
-        self.step.place(x=270, y=75)
+        self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
@@ -782,7 +782,7 @@ class Finished(tk.Frame):
         self.whatnext.place(x=270, y=180)
 
         self.finish_pg02 = tk.Label(self,
-                                    text=f"""Follow BitGreen announcements to get updates on how to credit funds to your substrate address on the new blockchain using the file generated by the swap tool.""",
+                                    text=f"""Follow Bitgreen announcements to get updates on how to credit funds to your substrate address on the new blockchain using the file generated by the airdrop tool.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.finish_pg02.place(x=270, y=230)
@@ -812,7 +812,7 @@ if __name__ == '__main__':
     wallet = Wallet()
     window = SwapApplication()
     window.protocol('WM_DELETE_WINDOW', on_closing)
-    window.title('BitGreen Swap Tool')
+    window.title('Bitgreen Airdrop Verifier')
     window.geometry("800x500+10+10")
     window.resizable(False, False)
     window.mainloop()
