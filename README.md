@@ -6,7 +6,7 @@ Always check the authenticity of any application you are downloading over the in
 
 **Windows:** `certutil -hashfile bitgreen-swap-tool.exe`
 ```
-SHA1 hash of bitgreen-swap-tool.exe:
+SHA1 hash of bitgreen-airdrop-verifier.exe:
 e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
 CertUtil: -hashfile command completed successfully.
 ```
