@@ -13,6 +13,7 @@ import click
 import requests
 from dotenv import load_dotenv
 import webbrowser
+import threading
 
 extDataDir = os.getcwd()
 if getattr(sys, 'frozen', False):
@@ -129,7 +130,7 @@ def resourcePath(relativePath):
     return os.path.join(base_path, relativePath)
 
 
-class SwapApplication(tk.Tk):
+class AirdropApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.operating_system = os.name
@@ -179,7 +180,7 @@ class SwapApplication(tk.Tk):
         container.grid_columnconfigure(0, weight=11)
 
         self.frames = {}
-        for F in (StartPage, WalletData, SeedPhrase, VerifyOwnership, SubmitSwap, Finished):
+        for F in (StartPage, WalletData, SeedPhrase, VerifyOwnership, SubmitAirdrop, KYC, Finished):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -206,37 +207,37 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        # Swap logo
-        swap_logo_img = Image.open(resourcePath('icons_BitGreen Swap.jpg'))
-        swap_logo_img = swap_logo_img.resize((200, 200), Image.Resampling.LANCZOS)
-        swap_logo = ImageTk.PhotoImage(swap_logo_img)
+        # Airdrop logo
+        airdrop_logo_img = Image.open(resourcePath('icons_BitGreen Airdrop.jpg'))
+        airdrop_logo_img = airdrop_logo_img.resize((200, 200), Image.Resampling.LANCZOS)
+        airdrop_logo = ImageTk.PhotoImage(airdrop_logo_img)
 
         # Call .jpg image into PhotoImage
         dot_img = Image.open(resourcePath('icons_Dot.jpg'))
         dot_img = dot_img.resize((30, 30), Image.Resampling.LANCZOS)
         dot_logo = ImageTk.PhotoImage(dot_img)
 
-        swap_logo_lbl = tk.Label(self, image=swap_logo, borderwidth=0, highlightthickness=0)
-        swap_logo_lbl.image = swap_logo
-        swap_logo_lbl.pack(side="top", fill="y", anchor=tk.SW, padx=50, pady=45)
+        airdrop_logo_lbl = tk.Label(self, image=airdrop_logo, borderwidth=0, highlightthickness=0)
+        airdrop_logo_lbl.image = airdrop_logo
+        airdrop_logo_lbl.pack(side="top", fill="y", anchor=tk.SW, padx=50, pady=45)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
             self.start_btn = tk.Button(self, text="START", font=controller.text_style_bold,
                                        fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
                                        height=1, width=14, pady=4, relief=tk.GROOVE, border=0, cursor="hand2",
-                                       bg='#00A519', highlightbackground='#00A519')
+                                       bg='#9e04c4', highlightbackground='#9e04c4')
             self.start_btn.place(x=85, y=275)
         else:
             # Start - POSIX
             self.start_btn = Button(self, text='START', font=controller.text_style_bold,
                                     fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
                                     height=40, width=130, pady=4, cursor="hand2",
-                                    activebackground=('#00A519', '#00A519'),
-                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                    activebackground=('#9e04c4', '#9e04c4'),
+                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.start_btn.place(x=85, y=275)
 
-        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current Bitgreen wallet, and to prove your ownership of those addresses to submit to the airdrop process.
+        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current Bitcoin Green wallet, and to prove your ownership of those addresses to submit to the airdrop process.
 
 Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
                                        font=controller.text_style, justify=tk.LEFT,
@@ -249,7 +250,7 @@ Subsequently you will receive the equivalent funds to your preferred Substrate a
                                        wraplength=480, bg='#FFFFFF', fg='#E80000')
         self.startpage_pg02.place(x=285, y=165, )
 
-        self.before_you_begin = tk.Label(self, text="Before you begin", fg='#00A519', bg='#FFFFFF',
+        self.before_you_begin = tk.Label(self, text="Before you begin", fg='#9e04c4', bg='#FFFFFF',
                                          font=controller.title_font)
         self.before_you_begin.place(x=285, y=250)
 
@@ -292,7 +293,7 @@ def menu_items(self, controller, active_step):
     dot.place(x=40, y=45)
 
     seed_phrase_lbl = tk.Label(self, text="Seed Phrase", bg='#FFFFFF', font=controller.text_style)
-    seed_phrase_lbl.place(x=90, y=115)
+    seed_phrase_lbl.place(x=90, y=100)
     if active_step == 2:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -302,10 +303,10 @@ def menu_items(self, controller, active_step):
     else:
         dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = dot_logo
-    dot.place(x=40, y=110)
+    dot.place(x=40, y=95)
 
     verify_ownership_lbl = tk.Label(self, text="Verify ownership", bg='#FFFFFF', font=controller.text_style)
-    verify_ownership_lbl.place(x=90, y=180)
+    verify_ownership_lbl.place(x=90, y=150)
     if active_step == 3:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -315,10 +316,10 @@ def menu_items(self, controller, active_step):
     else:
         dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = dot_logo
-    dot.place(x=40, y=175)
+    dot.place(x=40, y=145)
 
-    submit_to_swap_lbl = tk.Label(self, text="Submit", bg='#FFFFFF', font=controller.text_style)
-    submit_to_swap_lbl.place(x=90, y=245)
+    submit_to_airdrop_lbl = tk.Label(self, text="Submit", bg='#FFFFFF', font=controller.text_style)
+    submit_to_airdrop_lbl.place(x=90, y=200)
     if active_step == 4:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -328,10 +329,10 @@ def menu_items(self, controller, active_step):
     else:
         dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = dot_logo
-    dot.place(x=40, y=240)
+    dot.place(x=40, y=195)
 
-    finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
-    finished_lbl.place(x=90, y=310)
+    kyc_lbl = tk.Label(self, text="KYC", bg='#FFFFFF', font=controller.text_style)
+    kyc_lbl.place(x=90, y=250)
     if active_step == 5:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = active_dot_logo
@@ -341,7 +342,20 @@ def menu_items(self, controller, active_step):
     else:
         dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
         dot.image = dot_logo
-    dot.place(x=40, y=305)
+    dot.place(x=40, y=245)
+
+    finished_lbl = tk.Label(self, text="Finished", bg='#FFFFFF', font=controller.text_style)
+    finished_lbl.place(x=90, y=300)
+    if active_step == 6:
+        dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = active_dot_logo
+    elif active_step > 6:
+        dot = tk.Label(self, image=tick_logo, borderwidth=0, highlightthickness=0)
+        dot.image = tick_logo
+    else:
+        dot = tk.Label(self, image=dot_logo, borderwidth=0, highlightthickness=0)
+        dot.image = dot_logo
+    dot.place(x=40, y=295)
 
 
 class WalletData(tk.Frame):
@@ -371,15 +385,15 @@ class WalletData(tk.Frame):
         ###########################
 
         ## BitGreen - Wallet Data ############
-        self.step_title = tk.Label(self, text="Bitgreen wallet data", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Bitcoin Green wallet data", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
-        self.step = tk.Label(self, text="STEP 1", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
+        self.step = tk.Label(self, text="STEP 1", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
         self.walletdata_pg01 = tk.Label(self,
-                                        text="""Select Bitgreen wallet data file. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
+                                        text="""Select Bitcoin Green wallet data file. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
         self.walletdata_pg01.place(x=270, y=110)
@@ -445,15 +459,15 @@ class WalletData(tk.Frame):
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
                                       fg='#FFFFFF', command=self.read_wallet, cursor="hand2",
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.next_btn.place(x=630, y=330)
         else:
             # Next - POSIX
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
                                    fg='#FFFFFF', command=self.read_wallet, cursor="hand2",
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.next_btn.place(x=630, y=330)
 
     def walletdir(self, event):
@@ -525,9 +539,9 @@ class SeedPhrase(tk.Frame):
         ###########################
 
         ## BitGreen - Seed Phrase ############
-        self.step_title = tk.Label(self, text="Seed Phrase", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Seed Phrase", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
-        self.step = tk.Label(self, text="STEP 2", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
+        self.step = tk.Label(self, text="STEP 2", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
@@ -551,27 +565,27 @@ class SeedPhrase(tk.Frame):
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
                                       fg='#FFFFFF', command=self.check_seed, cursor="hand2",
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.back_btn.place(x=270, y=330)
         else:
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
                                    fg='#FFFFFF', command=self.check_seed, cursor="hand2",
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold, cursor="hand2",
                                    fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.back_btn.place(x=270, y=330)
 
     def check_seed(self):
@@ -619,16 +633,16 @@ class VerifyOwnership(tk.Frame):
         ###########################
 
         ## BitGreen - Verify Ownership ############
-        self.step_title = tk.Label(self, text="Verify Ownership", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Verify Ownership", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
-        self.step = tk.Label(self, text="STEP 3", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
+        self.step = tk.Label(self, text="STEP 3", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
         self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step.
         
-This both proves that your substrate address 'owns' the BITG addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
+This both proves that your substrate address 'owns' the Bitcoin Green addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.verify_pg01.place(x=270, y=110)
@@ -652,27 +666,27 @@ This both proves that your substrate address 'owns' the BITG addresses on the ol
             self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=self.verify_substrate_address,
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=lambda: controller.show_frame("SeedPhrase"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.back_btn.place(x=270, y=330)
         else:
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold, cursor="hand2",
                                    fg='#FFFFFF', command=self.verify_substrate_address,
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold, cursor="hand2",
                                    fg='#FFFFFF', command=lambda: controller.show_frame("SeedPhrase"),
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.back_btn.place(x=270, y=330)
 
     def verify_substrate_address(self):
@@ -686,12 +700,12 @@ This both proves that your substrate address 'owns' the BITG addresses on the ol
         r = requests.post(url, json={'address': message})
         result = r.json()
         if result['status']:
-            self.controller.show_frame("SubmitSwap")
+            self.controller.show_frame("SubmitAirdrop")
         else:
             messagebox.showinfo("Error", "You must specify a valid substrate address.")
 
 
-class SubmitSwap(tk.Frame):
+class SubmitAirdrop(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -703,25 +717,23 @@ class SubmitSwap(tk.Frame):
         separator.place(relx=0.3, rely=0.1, relwidth=0, relheight=0.8)
         ###########################
 
-        ## BitGreen - Verify Ownership ############
-        self.step_title = tk.Label(self, text="Submit for airdrop", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Submit for airdrop", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
-        self.step = tk.Label(self, text="STEP 4", fg='#00A519', bg='#FFFFFF', font=controller.title_font_step)
+        self.step = tk.Label(self, text="STEP 4", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
-        ######################################
 
-        self.submitswap_pg01 = tk.Label(self,
+        self.submit_pg01 = tk.Label(self,
                                         text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
-        self.submitswap_pg01.place(x=270, y=100)
+        self.submit_pg01.place(x=270, y=100)
 
-        self.submitswap_pg02 = tk.Label(self,
+        self.submit_pg02 = tk.Label(self,
                                         text="""This will sign new substrate address with each keypair provided.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
-        self.submitswap_pg02.place(x=270, y=190)
+        self.submit_pg02.place(x=270, y=190)
 
         self.c1 = tk.Checkbutton(self, text='I have read and accept Terms and Conditions',
                                  variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
@@ -730,49 +742,49 @@ class SubmitSwap(tk.Frame):
                                  highlightthickness=0, relief=tk.GROOVE)
         self.c1.place(x=270, y=240)
         self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
-                                             fg='#00A519', cursor="hand2", font=controller.text_style)
+                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.terms_and_conditions.place(x=485, y=239)
         self.terms_and_conditions.bind("<Button-1>",
-                                       lambda e: webbrowser.open_new("https://airdrop.bitgreenswiss.org/tos"))
+                                       lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
 
         if controller.operating_system != 'posix':
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
-                                        fg='#FFFFFF', command=self.submit2swap, cursor="hand2",
+                                        fg='#FFFFFF', command=self.submit2airdrop,
                                         width=8, pady=2, relief=tk.GROOVE, border=0,
-                                        bg='#00A519', highlightbackground='#00A519', state=tk.DISABLED)
+                                        bg='#9e04c4', highlightbackground='#9e04c4', state=tk.DISABLED)
             self.submit_btn.place(x=630, y=290)
 
-            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold, cursor="hand2",
-                                      fg='#FFFFFF', command=lambda: controller.show_frame("Finished"),
+            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
+                                      fg='#FFFFFF', command=lambda: controller.show_frame("KYC"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519', state=tk.DISABLED)
+                                      bg='#9e04c4', highlightbackground='#9e04c4', state=tk.DISABLED)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#00A519', highlightbackground='#00A519')
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.back_btn.place(x=270, y=330)
         else:
             self.submit_btn = Button(self, text='SIGN', font=controller.text_style_bold,
-                                     fg='#FFFFFF', command=self.submit2swap, cursor="hand2",
+                                     fg='#FFFFFF', command=self.submit2airdrop,
                                      height=40, width=130, pady=4,
-                                     activebackground=('#00A519', '#00A519'),
-                                     activeforeground='#FFFFFF', bg='#00A519', borderless=True, state=tk.DISABLED)
+                                     activebackground=('#9e04c4', '#9e04c4'),
+                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True, state=tk.DISABLED)
             self.submit_btn.place(x=630, y=290)
 
-            self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold, cursor="hand2",
-                                   fg='#FFFFFF', command=lambda: controller.show_frame("Finished"),
+            self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
+                                   fg='#FFFFFF', command=lambda: controller.show_frame("KYC"),
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True, state=tk.DISABLED)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True, state=tk.DISABLED)
             self.next_btn.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold, cursor="hand2",
                                    fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
                                    height=40, width=130, pady=4,
-                                   activebackground=('#00A519', '#00A519'),
-                                   activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.back_btn.place(x=270, y=330)
 
     def agree_tos(self):
@@ -780,16 +792,21 @@ class SubmitSwap(tk.Frame):
         signed = self.controller.shared_data["addresses-signed"]
 
         if accepted:
+            self.submit_btn['cursor'] = 'hand2'
             self.submit_btn["state"] = tk.NORMAL
             if signed:
+                self.next_btn['cursor'] = 'hand2'
                 self.next_btn["state"] = tk.NORMAL
             else:
                 self.next_btn["state"] = tk.DISABLED
+                self.next_btn['cursor'] = ''
         else:
             self.submit_btn["state"] = tk.DISABLED
+            self.submit_btn['cursor'] = ''
             self.next_btn["state"] = tk.DISABLED
+            self.next_btn['cursor'] = ''
 
-    def submit2swap(self):
+    def submit2airdrop(self):
         message = self.controller.shared_data["substrate-addr"].get()
 
         self.controller.shared_data["addresses-signed"] = False
@@ -810,16 +827,19 @@ class SubmitSwap(tk.Frame):
         r = requests.post(url, json=output)
         result = r.json()
         if result['status']:
-            # messagebox.showinfo("Information",
+            # message = messagebox.showinfo("Information",
             #                     f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
+
             self.controller.shared_data["addresses-signed"] = True
             self.next_btn["state"] = tk.NORMAL
+            self.next_btn['cursor'] = 'hand2'
             self.submit_btn["state"] = tk.NORMAL
+            self.submit_btn['cursor'] = 'hand2'
         else:
             messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
 
-class Finished(tk.Frame):
+class KYC(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -832,19 +852,80 @@ class Finished(tk.Frame):
         separator.place(relx=0.3, rely=0.1, relwidth=0, relheight=0.8)
         ###########################
 
-        ## BitGreen - Verify Ownership ############
-        self.step_title = tk.Label(self, text="Finished", fg='#00A519', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="KYC", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step_title.place(x=270, y=40)
-        ######################################
 
         self.finish_pg01 = tk.Label(self,
-                                    text=f"""Congratulations, you have successfully signed your BITG address(s) with your specified substrate address.""",
+                                    text=f"""To finish application, please KYC yourself. Make sure to use same substrate address in the process.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.finish_pg01.place(x=270, y=90)
 
-        self.whatnext = tk.Label(self, text="What's next?", fg='#00A519', bg='#FFFFFF', font=controller.title_font)
+        if controller.operating_system != 'posix':
+            self.kyc_btn = tk.Button(self, text="KYC Start", font=controller.text_style_bold, cursor="hand2",
+                                       fg='#FFFFFF', command=self.kyc_start,
+                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                       highlightbackground='#9e04c4', bg='#9e04c4')
+            self.kyc_btn.place(x=270, y=160)
+        else:
+            self.kyc_btn = Button(self, text='KYC Start', font=controller.text_style_bold, cursor="hand2",
+                                    fg='#FFFFFF', command=self.kyc_start,
+                                    height=40, width=130, pady=4,
+                                    activebackground=('#9e04c4', '#9e04c4'),
+                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+            self.kyc_btn.place(x=270, y=160)
+
+    def kyc_start(self):
+        address = self.controller.shared_data["substrate-addr"].get()
+        url = os.getenv('SERVER_API_URL') + '/kyc/login'
+        r = requests.post(url, json={'address': address})
+        result = r.json()
+
+        if result['status']:
+            self.check_kyc()
+
+            webbrowser.open_new(result['url'])
+        else:
+            messagebox.showinfo('message', 'Something went wrong. Please try again or contact us.')
+
+    def check_kyc(self):
+        address = self.controller.shared_data["substrate-addr"].get()
+        url = os.getenv('SERVER_API_URL') + '/kyc/check'
+        r = requests.post(url, json={'address': address})
+        result = r.json()
+
+        if result['status']:
+            self.controller.show_frame("Finished")
+        else:
+            timer = threading.Timer(5, self.check_kyc)
+            timer.start()
+
+
+class Finished(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        address = self.controller.shared_data["substrate-addr"].get()
+
+        menu_items(self, controller, 6)
+
+        ## Separate ###############
+        separator = ttk.Separator(self, orient='vertical')
+        separator.place(relx=0.3, rely=0.1, relwidth=0, relheight=0.8)
+        ###########################
+
+        self.step_title = tk.Label(self, text="Finished", fg='#9e04c4', bg='#FFFFFF',
+                                   font=controller.title_font)
+        self.step_title.place(x=270, y=40)
+
+        self.finish_pg01 = tk.Label(self,
+                                    text=f"""Congratulations, you have successfully signed your Bitcoin Green address(s) with your specified substrate address.""",
+                                    font=controller.text_style, justify=tk.LEFT,
+                                    wraplength=500, bg='#FFFFFF')
+        self.finish_pg01.place(x=270, y=90)
+
+        self.whatnext = tk.Label(self, text="What's next?", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font)
         self.whatnext.place(x=270, y=180)
 
         self.finish_pg02 = tk.Label(self,
@@ -857,14 +938,14 @@ class Finished(tk.Frame):
             self.close_btn = tk.Button(self, text="CLOSE", font=controller.text_style_bold, cursor="hand2",
                                        fg='#FFFFFF', command=lambda: controller.destroy(),
                                        height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                       highlightbackground='#00A519', bg='#00A519')
+                                       highlightbackground='#9e04c4', bg='#9e04c4')
             self.close_btn.place(x=600, y=330)
         else:
             self.close_btn = Button(self, text='CLOSE', font=controller.text_style_bold, cursor="hand2",
                                     fg='#FFFFFF', command=lambda: controller.destroy(),
                                     height=40, width=130, pady=4,
-                                    activebackground=('#00A519', '#00A519'),
-                                    activeforeground='#FFFFFF', bg='#00A519', borderless=True)
+                                    activebackground=('#9e04c4', '#9e04c4'),
+                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.close_btn.place(x=630, y=330)
 
 
@@ -876,7 +957,7 @@ def on_closing():
 
 if __name__ == '__main__':
     wallet = Wallet()
-    window = SwapApplication()
+    window = AirdropApplication()
     window.protocol('WM_DELETE_WINDOW', on_closing)
     window.title('Bitgreen Airdrop Verifier')
     window.geometry("800x500+10+10")
