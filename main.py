@@ -250,8 +250,10 @@ class StartPage(tk.Frame):
                                        fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.announcement01.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
-        if controller.operating_system != 'posix':
+        if sys.platform == "linux":
             self.announcement01.place(x=582, y=91)
+        elif sys.platform == "darwin":
+            self.announcement01.place(x=490, y=61)
         else:
             self.announcement01.place(x=490, y=61)
 
@@ -281,8 +283,10 @@ class StartPage(tk.Frame):
                                              fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.terms_and_conditions.bind("<Button-1>",
                                        lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
-        if controller.operating_system != 'posix':
+        if sys.platform == "linux":
             self.terms_and_conditions.place(x=608, y=299)
+        elif sys.platform == "darwin":
+            self.terms_and_conditions.place(x=506, y=298)
         else:
             self.terms_and_conditions.place(x=506, y=298)
 
@@ -296,8 +300,10 @@ class StartPage(tk.Frame):
                                              fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.announcement.bind("<Button-1>",
                                        lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
-        if controller.operating_system != 'posix':
+        if sys.platform == "linux":
             self.announcement.place(x=624, y=329)
+        elif sys.platform == "darwin":
+            self.announcement.place(x=514, y=328)
         else:
             self.announcement.place(x=514, y=328)
 
@@ -462,7 +468,7 @@ class WalletData(tk.Frame):
                                             font=controller.text_style_small, justify=tk.LEFT,
                                             wraplength=500, bg='#FFFFFF')
             self.walletdata_pg03.place(x=270, y=340)
-        elif sys.platform == "windows":
+        else:
             self.walletdata_pg03 = tk.Label(self,
                                             text="""Go to Start -> Run and enter \"%APPDATA%\Bitgreen\"""",
                                             font=controller.text_style_small, justify=tk.LEFT,
@@ -705,8 +711,10 @@ Airdrop announcement on how to create one.""",
                                        fg='#850303', cursor="hand2", font=controller.text_style)
         self.verify_pg03.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
-        if controller.operating_system != 'posix':
+        if sys.platform == "linux":
             self.verify_pg03.place(x=270, y=265)
+        elif sys.platform == "darwin":
+            self.verify_pg03.place(x=267, y=262)
         else:
             self.verify_pg03.place(x=267, y=262)
 
@@ -984,10 +992,14 @@ class Finished(tk.Frame):
                                        fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.finish_pg04.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
+        if sys.platform == "linux":
+            self.finish_pg04.place(x=596, y=288)
+        elif sys.platform == "darwin":
+            self.finish_pg04.place(x=682, y=265)
+        else:
+            self.finish_pg04.place(x=682, y=265)
 
         if controller.operating_system != 'posix':
-            self.finish_pg04.place(x=596, y=288)
-
             self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
                                        fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                        height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
@@ -1000,8 +1012,6 @@ class Finished(tk.Frame):
                                        highlightbackground='#9e04c4', bg='#9e04c4')
             self.close_btn.place(x=600, y=330)
         else:
-            self.finish_pg04.place(x=682, y=265)
-
             self.checker_btn = Button(self, text='CHECK ADDRESS', font=controller.text_style_bold, cursor="hand2",
                                     fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                     height=40, width=195, pady=4,
