@@ -246,10 +246,14 @@ class StartPage(tk.Frame):
         self.startpage_pg01.place(x=265, y=15)
 
         self.announcement01 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
+                                       pady='0', padx='0',
                                        fg='#9e04c4', cursor="hand2", font=controller.text_style)
-        self.announcement01.place(x=582, y=91)
         self.announcement01.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+        if controller.operating_system != 'posix':
+            self.announcement01.place(x=582, y=91)
+        else:
+            self.announcement01.place(x=490, y=61)
 
         self.startpage_pg02 = tk.Label(self,
                                        text="""Note the snapshot date for address balances is block 483250 which occured on October 26th 2021. Only balances that were in mobile or the desktop wallet at this time can be considered for the airdrop. For additional information on this refert to the Airdrop Announcement.""",
@@ -275,9 +279,12 @@ class StartPage(tk.Frame):
         self.c1.place(x=250, y=300)
         self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
                                              fg='#9e04c4', cursor="hand2", font=controller.text_style)
-        self.terms_and_conditions.place(x=608, y=299)
         self.terms_and_conditions.bind("<Button-1>",
                                        lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
+        if controller.operating_system != 'posix':
+            self.terms_and_conditions.place(x=608, y=299)
+        else:
+            self.terms_and_conditions.place(x=506, y=298)
 
         self.c2 = tk.Checkbutton(self, text='I created a Substrate address and read the announcement.',
                                  variable=controller.shared_data["user-ready"], command=self.agree_tos,
@@ -287,9 +294,12 @@ class StartPage(tk.Frame):
         self.c2.place(x=250, y=330)
         self.announcement = tk.Label(self, text="announcement", bg='#FFFFFF',
                                              fg='#9e04c4', cursor="hand2", font=controller.text_style)
-        self.announcement.place(x=624, y=329)
         self.announcement.bind("<Button-1>",
                                        lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+        if controller.operating_system != 'posix':
+            self.announcement.place(x=624, y=329)
+        else:
+            self.announcement.place(x=514, y=328)
 
     def agree_tos(self):
         accepted = self.controller.shared_data["tos-accepted"].get()
@@ -693,9 +703,12 @@ Airdrop announcement on how to create one.""",
 
         self.verify_pg03 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
                                        fg='#850303', cursor="hand2", font=controller.text_style)
-        self.verify_pg03.place(x=270, y=265)
         self.verify_pg03.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+        if controller.operating_system != 'posix':
+            self.verify_pg03.place(x=270, y=265)
+        else:
+            self.verify_pg03.place(x=267, y=262)
 
         self.substrate_txtfld = tk.Entry(self, textvariable=controller.shared_data["substrate-addr"],
                                          bd=2, relief=tk.GROOVE, font=controller.text_style)
@@ -969,11 +982,12 @@ class Finished(tk.Frame):
 
         self.finish_pg04 = tk.Label(self, text="here", bg='#FFFFFF',
                                        fg='#9e04c4', cursor="hand2", font=controller.text_style)
-        self.finish_pg04.place(x=596, y=288)
         self.finish_pg04.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
 
         if controller.operating_system != 'posix':
+            self.finish_pg04.place(x=596, y=288)
+
             self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
                                        fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                        height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
@@ -986,6 +1000,8 @@ class Finished(tk.Frame):
                                        highlightbackground='#9e04c4', bg='#9e04c4')
             self.close_btn.place(x=600, y=330)
         else:
+            self.finish_pg04.place(x=682, y=265)
+
             self.checker_btn = Button(self, text='CHECK ADDRESS', font=controller.text_style_bold, cursor="hand2",
                                     fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                     height=40, width=195, pady=4,
