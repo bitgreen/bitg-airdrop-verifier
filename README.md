@@ -4,7 +4,7 @@
 ### Checking application authenticity
 Always check the authenticity of any application you are downloading over the internet. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified/tampered and should match the values below.
 
-**Windows:** `certutil -hashfile bitgreen-swap-tool.exe`
+**Windows:** `certutil -hashfile bitgreen-airdrop-verifier-WINx64.exe`
 ```
 SHA1 hash of bitgreen-airdrop-verifier.exe:
 e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
@@ -13,7 +13,7 @@ CertUtil: -hashfile command completed successfully.
 
 **Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier`
 ```
-d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
+d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-airdrop-verifier-MacOSX.zip
 ```
 
 ---
@@ -27,6 +27,8 @@ d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-swap-tool-MacOSX.zip
 `pip3 install -r requirements.txt`
 
 #### Mac OS
+`brew install berkeley-db@4`  
+`BERKELEYDB_DIR=$(brew --prefix berkeley-db@4) pip3 install bsddb3`  
 `python3 -m easy_install bsddb3`  
 `pip3 install -r requirements.txt`
 
@@ -48,4 +50,4 @@ Ubuntu:
 ```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data ".env:." --noconsole -n bitgreen-airdrop-verifier --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean --codesign-identity="IDENTITY"```

@@ -157,7 +157,7 @@ class AirdropApplication(tk.Tk):
             "substrate-addr": tk.StringVar(),
             "seed-phrase": tk.StringVar(),
             "tos-accepted": tk.BooleanVar(),
-            "addresses-signed": False,
+            "user-ready": tk.BooleanVar()
         }
 
         self.operating_system = os.name
@@ -224,46 +224,83 @@ class StartPage(tk.Frame):
             # Start - WINDOWS
             self.start_btn = tk.Button(self, text="START", font=controller.text_style_bold,
                                        fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
-                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0, cursor="hand2",
+                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0, state=tk.DISABLED,
                                        bg='#9e04c4', highlightbackground='#9e04c4')
             self.start_btn.place(x=85, y=275)
         else:
             # Start - POSIX
             self.start_btn = Button(self, text='START', font=controller.text_style_bold,
                                     fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
-                                    height=40, width=130, pady=4, cursor="hand2",
+                                    height=40, width=130, pady=4, state=tk.DISABLED,
                                     activebackground=('#9e04c4', '#9e04c4'),
                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.start_btn.place(x=85, y=275)
 
-        self.startpage_pg01 = tk.Label(self, text="""This tool is designed to make it easy for you to identify all addresses that exist in your current Bitcoin Green wallet, and to prove your ownership of those addresses to submit to the airdrop process.
-
-Subsequently you will receive the equivalent funds to your preferred Substrate address on the new blockchain.""",
+        self.startpage_pg01 = tk.Label(self, text="""This tool will guide you through the process of claiming the Bitgreen Airdrop. You will require the following:
+        • wallet.dat from Bitcoin Green Desktop wallet and/or seed phrase from Mobile wallet
+        • polkadot.js wallet extension (see Airdrop Announcement)
+        • documents for Know Your Customer (KYC) processing
+        """,
                                        font=controller.text_style, justify=tk.LEFT,
-                                       wraplength=480, bg='#FFFFFF')
-        self.startpage_pg01.place(x=285, y=15, )
+                                       wraplength=520, bg='#FFFFFF')
+        self.startpage_pg01.place(x=265, y=15)
+
+        self.announcement01 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
+                                       fg='#9e04c4', cursor="hand2", font=controller.text_style)
+        self.announcement01.place(x=582, y=91)
+        self.announcement01.bind("<Button-1>",
+                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
 
         self.startpage_pg02 = tk.Label(self,
-                                       text="""Note the snapshot date for address balances is block 483250 (or around 26th October 2021).To receive funds from the airdrop on the new chain, you must have had a balance at this snapshot date.""",
-                                       font=controller.text_style_bold, justify=tk.LEFT,
-                                       wraplength=480, bg='#FFFFFF', fg='#E80000')
-        self.startpage_pg02.place(x=285, y=165, )
+                                       text="""Note the snapshot date for address balances is block 483250 which occured on October 26th 2021. Only balances that were in mobile or the desktop wallet at this time can be considered for the airdrop. For additional information on this refert to the Airdrop Announcement.""",
+                                       font=controller.text_style, justify=tk.LEFT,
+                                       wraplength=520, bg='#FFFFFF', fg='#E80000')
+        self.startpage_pg02.place(x=265, y=145)
+
+        self.announcement02 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
+                                       fg='#850303', cursor="hand2", font=controller.text_style)
+        self.announcement02.place(x=264, y=221)
+        self.announcement02.bind("<Button-1>",
+                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
 
         self.before_you_begin = tk.Label(self, text="Before you begin", fg='#9e04c4', bg='#FFFFFF',
                                          font=controller.title_font)
-        self.before_you_begin.place(x=285, y=250)
+        self.before_you_begin.place(x=265, y=250)
 
-        if controller.operating_system != 'posix':
-            self.startpage_pg03 = tk.Label(self, text="Please ensure that you already have a substrate address for "
-                                                      "the new chain.", font=controller.text_style, justify=tk.LEFT,
-                                           wraplength=500, bg='#FFFFFF')
-            self.startpage_pg03.place(x=285, y=295)
+        self.c1 = tk.Checkbutton(self, text='I acknowledge Bitgreen Airdrop Standard Terms and Conditions.',
+                                 variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
+                                 onvalue=True, offvalue=False, font=controller.text_style, borderwidth=0,
+                                 bg="#fff", activebackground="#fff",
+                                 highlightthickness=0, relief=tk.GROOVE)
+        self.c1.place(x=250, y=300)
+        self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
+                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
+        self.terms_and_conditions.place(x=608, y=299)
+        self.terms_and_conditions.bind("<Button-1>",
+                                       lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
+
+        self.c2 = tk.Checkbutton(self, text='I created a Substrate address and read the announcement.',
+                                 variable=controller.shared_data["user-ready"], command=self.agree_tos,
+                                 onvalue=True, offvalue=False, font=controller.text_style, borderwidth=0,
+                                 bg="#fff", activebackground="#fff",
+                                 highlightthickness=0, relief=tk.GROOVE)
+        self.c2.place(x=250, y=330)
+        self.announcement = tk.Label(self, text="announcement", bg='#FFFFFF',
+                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
+        self.announcement.place(x=624, y=329)
+        self.announcement.bind("<Button-1>",
+                                       lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+
+    def agree_tos(self):
+        accepted = self.controller.shared_data["tos-accepted"].get()
+        ready = self.controller.shared_data["user-ready"].get()
+
+        if accepted and ready:
+            self.start_btn['cursor'] = 'hand2'
+            self.start_btn["state"] = tk.NORMAL
         else:
-            self.startpage_pg03 = tk.Label(self, text="Please ensure that you already have a substrate address for "
-                                                      "the new chain.", font=controller.text_style, justify=tk.LEFT,
-                                           wraplength=500, bg='#FFFFFF')
-            self.startpage_pg03.place(x=285, y=295)
-
+            self.start_btn["state"] = tk.DISABLED
+            self.start_btn['cursor'] = ''
 
 def menu_items(self, controller, active_step):
     active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
@@ -278,7 +315,7 @@ def menu_items(self, controller, active_step):
     tick_img = tick_img.resize((30, 30), Image.Resampling.LANCZOS)
     tick_logo = ImageTk.PhotoImage(tick_img)
 
-    wallet_data_lbl = tk.Label(self, text="Wallet data", bg='#FFFFFF', font=controller.text_style)
+    wallet_data_lbl = tk.Label(self, text="Desktop Wallet", bg='#FFFFFF', font=controller.text_style)
     wallet_data_lbl.place(x=90, y=50)
     if active_step == 1:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
@@ -291,7 +328,7 @@ def menu_items(self, controller, active_step):
         dot.image = dot_logo
     dot.place(x=40, y=45)
 
-    seed_phrase_lbl = tk.Label(self, text="Seed Phrase", bg='#FFFFFF', font=controller.text_style)
+    seed_phrase_lbl = tk.Label(self, text="Mobile Wallet", bg='#FFFFFF', font=controller.text_style)
     seed_phrase_lbl.place(x=90, y=100)
     if active_step == 2:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
@@ -317,7 +354,7 @@ def menu_items(self, controller, active_step):
         dot.image = dot_logo
     dot.place(x=40, y=145)
 
-    submit_to_airdrop_lbl = tk.Label(self, text="Submit", bg='#FFFFFF', font=controller.text_style)
+    submit_to_airdrop_lbl = tk.Label(self, text="Sign and Submit", bg='#FFFFFF', font=controller.text_style)
     submit_to_airdrop_lbl.place(x=90, y=200)
     if active_step == 4:
         dot = tk.Label(self, image=active_dot_logo, borderwidth=0, highlightthickness=0)
@@ -384,7 +421,7 @@ class WalletData(tk.Frame):
         ###########################
 
         ## BitGreen - Wallet Data ############
-        self.step_title = tk.Label(self, text="Bitcoin Green wallet data", fg='#9e04c4', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Desktop Wallet", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 1", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
@@ -392,16 +429,16 @@ class WalletData(tk.Frame):
         ######################################
 
         self.walletdata_pg01 = tk.Label(self,
-                                        text="""Select Bitcoin Green wallet data file. If you have encrypted your wallet, enter the password to unlock it on the next step. If you only had a mobile wallet, skip this step.""",
+                                        text="""If you did not have a desktop wallet click next to skip this step.""",
                                         font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=500, bg='#FFFFFF')
+                                        wraplength=500, bg='#FFFFFF', fg='#E80000')
         self.walletdata_pg01.place(x=270, y=110)
 
         self.walletdata_pg02 = tk.Label(self,
                                         text="""Please make a backup of your wallet.dat file before you continue to use for this process and copy it to a different location. You might have to activate hidden files to reach it.""",
                                         font=controller.text_style, justify=tk.LEFT,
                                         wraplength=500, bg='#FFFFFF')
-        self.walletdata_pg02.place(x=270, y=170)
+        self.walletdata_pg02.place(x=270, y=155)
 
         if sys.platform == "linux":
             self.walletdata_pg03 = tk.Label(self,
@@ -424,7 +461,7 @@ class WalletData(tk.Frame):
 
         icon_folder = tk.Label(self, image=icon_folder_logo, borderwidth=0, highlightthickness=0)
         icon_folder.image = icon_folder_logo
-        icon_folder.place(x=270, y=245)
+        icon_folder.place(x=270, y=235)
 
         self.walletdir_txtfld = tk.Entry(self, textvariable=controller.shared_data["directory"], bd=2, cursor="hand2",
                                          relief=tk.GROOVE, font=controller.text_style)
@@ -436,11 +473,11 @@ class WalletData(tk.Frame):
         self.walletdir_txtfld.bind("<FocusOut>",
                                    lambda event, message="Wallet password": handle_focus_out(event, "Wallet file",
                                                                                              self.walletdir_txtfld))
-        self.walletdir_txtfld.place(x=310, y=245, width=452, height=35)
+        self.walletdir_txtfld.place(x=310, y=235, width=452, height=35)
 
         icon_key = tk.Label(self, image=icon_key_logo, borderwidth=0, highlightthickness=0)
         icon_key.image = icon_key_logo
-        icon_key.place(x=270, y=290)
+        icon_key.place(x=270, y=280)
 
         self.passwd_txtfld = tk.Entry(self, textvariable=controller.shared_data["password"], bd=2,
                                       relief=tk.GROOVE, font=controller.text_style)
@@ -451,7 +488,7 @@ class WalletData(tk.Frame):
         self.passwd_txtfld.bind("<FocusOut>",
                                 lambda event, message="Wallet password": handle_focus_out(event, "Wallet password",
                                                                                           self.passwd_txtfld))
-        self.passwd_txtfld.place(x=310, y=290, width=452, height=35)
+        self.passwd_txtfld.place(x=310, y=280, width=452, height=35)
 
         if controller.operating_system != 'posix':
             # Start - WINDOWS
@@ -538,17 +575,24 @@ class SeedPhrase(tk.Frame):
         ###########################
 
         ## BitGreen - Seed Phrase ############
-        self.step_title = tk.Label(self, text="Seed Phrase", fg='#9e04c4', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Mobile Wallet", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 2", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.seed_pg01 = tk.Label(self, text="If you have wallet seed phrase, enter it here.",
+
+        self.seed_pg01 = tk.Label(self,
+                                        text="""If you did not have a mobile wallet click next to skip this step.""",
+                                        font=controller.text_style, justify=tk.LEFT,
+                                        wraplength=500, bg='#FFFFFF', fg='#E80000')
+        self.seed_pg01.place(x=270, y=110)
+
+        self.seed_pg02 = tk.Label(self, text="Please enter your 12 word long seed phrase that you got when you created your mobile wallet.",
                                   font=controller.text_style, justify=tk.LEFT,
                                   wraplength=500, bg='#FFFFFF')
-        self.seed_pg01.place(x=270, y=110)
+        self.seed_pg02.place(x=270, y=140)
 
         self.seed_txtfld = tk.Entry(self, textvariable=controller.shared_data["seed-phrase"],
                                     bd=2, relief=tk.GROOVE, font=controller.text_style)
@@ -636,12 +680,22 @@ class VerifyOwnership(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step.
-        
-This both proves that your substrate address 'owns' the Bitcoin Green addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
+        self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step. This both proves that your substrate address 'owns' the Bitcoin Green addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
                                     font=controller.text_style, justify=tk.LEFT,
-                                    wraplength=500, bg='#FFFFFF')
+                                    wraplength=520, bg='#FFFFFF')
         self.verify_pg01.place(x=270, y=110)
+
+        self.verify_pg02 = tk.Label(self, text="""If you did not yet create a Substrate address refer to the
+Airdrop announcement on how to create one.""",
+                                    font=controller.text_style, justify=tk.LEFT,
+                                    wraplength=520, bg='#FFFFFF', fg='#E80000')
+        self.verify_pg02.place(x=270, y=246)
+
+        self.verify_pg03 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
+                                       fg='#850303', cursor="hand2", font=controller.text_style)
+        self.verify_pg03.place(x=270, y=265)
+        self.verify_pg03.bind("<Button-1>",
+                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
 
         self.substrate_txtfld = tk.Entry(self, textvariable=controller.shared_data["substrate-addr"],
                                          bd=2, relief=tk.GROOVE, font=controller.text_style)
@@ -713,7 +767,7 @@ class SubmitAirdrop(tk.Frame):
         separator.place(relx=0.3, rely=0.1, relwidth=0, relheight=0.8)
         ###########################
 
-        self.step_title = tk.Label(self, text="Submit for airdrop", fg='#9e04c4', bg='#FFFFFF',
+        self.step_title = tk.Label(self, text="Sign and Submit", fg='#9e04c4', bg='#FFFFFF',
                                    font=controller.title_font)
         self.step = tk.Label(self, text="STEP 4", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font_step)
         self.step.place(x=270, y=80)
@@ -726,35 +780,29 @@ class SubmitAirdrop(tk.Frame):
         self.submit_pg01.place(x=270, y=100)
 
         self.submit_pg02 = tk.Label(self,
-                                    text="""This will sign new substrate address with each keypair provided.""",
+                                    text="""After clicking submit all found addresses will be checked even ones you never used. This process can take a while and the app might be unresponsive in the meantime.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.submit_pg02.place(x=270, y=190)
 
-        self.c1 = tk.Checkbutton(self, text='I have read and accept Terms and Conditions',
-                                 variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
-                                 onvalue=True, offvalue=False, font=controller.text_style, borderwidth=0,
-                                 bg="#fff", activebackground="#fff",
-                                 highlightthickness=0, relief=tk.GROOVE)
-        self.c1.place(x=270, y=240)
-        self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
-                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
-        self.terms_and_conditions.place(x=485, y=239)
-        self.terms_and_conditions.bind("<Button-1>",
-                                       lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
-
         if controller.operating_system != 'posix':
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
-                                        fg='#FFFFFF', command=self.submit2airdrop,
+                                        fg='#FFFFFF', command=self.submit2airdrop, cursor="hand2",
                                         width=8, pady=2, relief=tk.GROOVE, border=0,
-                                        bg='#9e04c4', highlightbackground='#9e04c4', state=tk.DISABLED)
+                                        bg='#9e04c4', highlightbackground='#9e04c4')
             self.submit_btn.place(x=630, y=290)
 
-            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold,
+            self.next_btn = tk.Button(self, text="NEXT", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=lambda: controller.show_frame("KYC"),
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#9e04c4', highlightbackground='#9e04c4', state=tk.DISABLED)
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
             self.next_btn.place(x=630, y=330)
+
+            self.next_btn_fake = tk.Button(self, text="NEXT", font=controller.text_style_bold, state=tk.DISABLED,
+                                      fg='#FFFFFF',
+                                      height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                      bg='#9e04c4', highlightbackground='#9e04c4')
+            self.next_btn_fake.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
                                       fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
@@ -764,17 +812,24 @@ class SubmitAirdrop(tk.Frame):
         else:
             self.submit_btn = Button(self, text='SIGN', font=controller.text_style_bold,
                                      fg='#FFFFFF', command=self.submit2airdrop,
-                                     height=40, width=130, pady=4,
+                                     height=40, width=130, pady=4, cursor="hand2",
                                      activebackground=('#9e04c4', '#9e04c4'),
-                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True, state=tk.DISABLED)
+                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.submit_btn.place(x=630, y=290)
 
             self.next_btn = Button(self, text='NEXT', font=controller.text_style_bold,
                                    fg='#FFFFFF', command=lambda: controller.show_frame("KYC"),
                                    height=40, width=130, pady=4,
-                                   activebackground=('#9e04c4', '#9e04c4'),
-                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True, state=tk.DISABLED)
+                                   activebackground=('#9e04c4', '#9e04c4'), cursor="hand2",
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.next_btn.place(x=630, y=330)
+
+            self.next_btn_fake = Button(self, text='NEXT', font=controller.text_style_bold,
+                                   fg='#FFFFFF',
+                                   height=40, width=130, pady=4, state=tk.DISABLED,
+                                   activebackground=('#9e04c4', '#9e04c4'),
+                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+            self.next_btn_fake.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold, cursor="hand2",
                                    fg='#FFFFFF', command=lambda: controller.show_frame("VerifyOwnership"),
@@ -783,29 +838,9 @@ class SubmitAirdrop(tk.Frame):
                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.back_btn.place(x=270, y=330)
 
-    def agree_tos(self):
-        accepted = self.controller.shared_data["tos-accepted"].get()
-        signed = self.controller.shared_data["addresses-signed"]
-
-        if accepted:
-            self.submit_btn['cursor'] = 'hand2'
-            self.submit_btn["state"] = tk.NORMAL
-            if signed:
-                self.next_btn['cursor'] = 'hand2'
-                self.next_btn["state"] = tk.NORMAL
-            else:
-                self.next_btn["state"] = tk.DISABLED
-                self.next_btn['cursor'] = ''
-        else:
-            self.submit_btn["state"] = tk.DISABLED
-            self.submit_btn['cursor'] = ''
-            self.next_btn["state"] = tk.DISABLED
-            self.next_btn['cursor'] = ''
-
     def submit2airdrop(self):
         message = self.controller.shared_data["substrate-addr"].get()
 
-        self.controller.shared_data["addresses-signed"] = False
         if message == 'Substrate address' or message == '':
             messagebox.showinfo("Error", "You must specify a substrate address")
             return
@@ -823,14 +858,10 @@ class SubmitAirdrop(tk.Frame):
         r = requests.post(url, json=output)
         result = r.json()
         if result['status']:
-            # message = messagebox.showinfo("Information",
-            #                     f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
+            messagebox.showinfo("Information",
+                                f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
 
-            self.controller.shared_data["addresses-signed"] = True
-            self.next_btn["state"] = tk.NORMAL
-            self.next_btn['cursor'] = 'hand2'
-            self.submit_btn["state"] = tk.NORMAL
-            self.submit_btn['cursor'] = 'hand2'
+            self.next_btn_fake.place_forget()
         else:
             messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
@@ -919,24 +950,49 @@ class Finished(tk.Frame):
                                     text=f"""Congratulations, you have successfully signed your Bitcoin Green address(s) with your specified substrate address.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
-        self.finish_pg01.place(x=270, y=90)
+        self.finish_pg01.place(x=270, y=80)
 
         self.whatnext = tk.Label(self, text="What's next?", fg='#9e04c4', bg='#FFFFFF', font=controller.title_font)
-        self.whatnext.place(x=270, y=180)
+        self.whatnext.place(x=270, y=140)
 
         self.finish_pg02 = tk.Label(self,
                                     text=f"""Follow Bitgreen announcements to get updates on how to credit funds to your substrate address on the new blockchain using the file generated by the airdrop tool.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
-        self.finish_pg02.place(x=270, y=230)
+        self.finish_pg02.place(x=270, y=180)
+
+        self.finish_pg03 = tk.Label(self,
+                                    text=f"""Currently there is no way to see your combined eligible balance. This will be added to the page later. In the meantime you can check your individual addresses here.""",
+                                    font=controller.text_style, justify=tk.LEFT,
+                                    wraplength=500, bg='#FFFFFF')
+        self.finish_pg03.place(x=270, y=250)
+
+        self.finish_pg04 = tk.Label(self, text="here", bg='#FFFFFF',
+                                       fg='#9e04c4', cursor="hand2", font=controller.text_style)
+        self.finish_pg04.place(x=596, y=288)
+        self.finish_pg04.bind("<Button-1>",
+                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
 
         if controller.operating_system != 'posix':
+            self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
+                                       fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                       height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
+                                       highlightbackground='#9e04c4', bg='#9e04c4')
+            self.checker_btn.place(x=260, y=330)
+
             self.close_btn = tk.Button(self, text="CLOSE", font=controller.text_style_bold, cursor="hand2",
                                        fg='#FFFFFF', command=lambda: controller.destroy(),
                                        height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                        highlightbackground='#9e04c4', bg='#9e04c4')
             self.close_btn.place(x=600, y=330)
         else:
+            self.checker_btn = Button(self, text='CHECK ADDRESS', font=controller.text_style_bold, cursor="hand2",
+                                    fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                    height=40, width=195, pady=4,
+                                    activebackground=('#9e04c4', '#9e04c4'),
+                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+            self.checker_btn.place(x=260, y=330)
+
             self.close_btn = Button(self, text='CLOSE', font=controller.text_style_bold, cursor="hand2",
                                     fg='#FFFFFF', command=lambda: controller.destroy(),
                                     height=40, width=130, pady=4,
