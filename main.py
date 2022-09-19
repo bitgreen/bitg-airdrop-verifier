@@ -224,17 +224,30 @@ class StartPage(tk.Frame):
             # Start - WINDOWS
             self.start_btn = tk.Button(self, text="START", font=controller.text_style_bold,
                                        fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
-                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0, state=tk.DISABLED,
+                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0, cursor='hand2',
                                        bg='#9e04c4', highlightbackground='#9e04c4')
             self.start_btn.place(x=85, y=275)
+
+            self.start_btn_fake = tk.Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
+                                           fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                           height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                           bg='#7c7c7d', highlightbackground='#7c7c7d')
+            self.start_btn_fake.place(x=85, y=275)
         else:
             # Start - POSIX
             self.start_btn = Button(self, text='START', font=controller.text_style_bold,
                                     fg='#FFFFFF', command=lambda: controller.show_frame("WalletData"),
-                                    height=40, width=130, pady=4, state=tk.DISABLED,
+                                    height=40, width=130, pady=4, cursor='hand2',
                                     activebackground=('#9e04c4', '#9e04c4'),
                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.start_btn.place(x=85, y=275)
+
+            self.start_btn_fake = tk.Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
+                                            fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                            height=40, width=130, pady=4, relief=tk.GROOVE, border=0,
+                                            activebackground=('#7c7c7d', '#7c7c7d'),
+                                            activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
+            self.start_btn_fake.place(x=85, y=275)
 
         self.startpage_pg01 = tk.Label(self, text="""This tool will guide you through the process of claiming the Bitgreen Airdrop. You will require the following:
         • wallet.dat from Bitcoin Green Desktop wallet and/or seed phrase from Mobile wallet
@@ -255,7 +268,7 @@ class StartPage(tk.Frame):
         elif sys.platform == "darwin":
             self.announcement01.place(x=490, y=61)
         else:
-            self.announcement01.place(x=490, y=61)
+            self.announcement01.place(x=496, y=88)
 
         self.startpage_pg02 = tk.Label(self,
                                        text="""Note the snapshot date for address balances is block 483250 which occured on October 26th 2021. Only balances that were in mobile or the desktop wallet at this time can be considered for the airdrop. For additional information on this refert to the Airdrop Announcement.""",
@@ -288,7 +301,7 @@ class StartPage(tk.Frame):
         elif sys.platform == "darwin":
             self.terms_and_conditions.place(x=506, y=298)
         else:
-            self.terms_and_conditions.place(x=506, y=298)
+            self.terms_and_conditions.place(x=516, y=299)
 
         self.c2 = tk.Checkbutton(self, text='I created a Substrate address and read the announcement.',
                                  variable=controller.shared_data["user-ready"], command=self.agree_tos,
@@ -305,18 +318,19 @@ class StartPage(tk.Frame):
         elif sys.platform == "darwin":
             self.announcement.place(x=514, y=328)
         else:
-            self.announcement.place(x=514, y=328)
+            self.announcement.place(x=524, y=329)
 
     def agree_tos(self):
         accepted = self.controller.shared_data["tos-accepted"].get()
         ready = self.controller.shared_data["user-ready"].get()
 
         if accepted and ready:
-            self.start_btn['cursor'] = 'hand2'
-            self.start_btn["state"] = tk.NORMAL
+            self.start_btn_fake.place_forget()
         else:
-            self.start_btn["state"] = tk.DISABLED
-            self.start_btn['cursor'] = ''
+            if self.controller.operating_system != 'posix':
+                self.start_btn_fake.place(x=85, y=275)
+            else:
+                self.start_btn_fake.place(x=85, y=275)
 
 def menu_items(self, controller, active_step):
     active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
@@ -716,7 +730,7 @@ Airdrop announcement on how to create one.""",
         elif sys.platform == "darwin":
             self.verify_pg03.place(x=267, y=262)
         else:
-            self.verify_pg03.place(x=267, y=262)
+            self.verify_pg03.place(x=270, y=264)
 
         self.substrate_txtfld = tk.Entry(self, textvariable=controller.shared_data["substrate-addr"],
                                          bd=2, relief=tk.GROOVE, font=controller.text_style)
@@ -809,7 +823,7 @@ class SubmitAirdrop(tk.Frame):
         if controller.operating_system != 'posix':
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
                                         fg='#FFFFFF', command=self.submit2airdrop, cursor="hand2",
-                                        width=8, pady=2, relief=tk.GROOVE, border=0,
+                                        width=14, pady=2, relief=tk.GROOVE, border=0,
                                         bg='#9e04c4', highlightbackground='#9e04c4')
             self.submit_btn.place(x=630, y=290)
 
@@ -820,9 +834,9 @@ class SubmitAirdrop(tk.Frame):
             self.next_btn.place(x=630, y=330)
 
             self.next_btn_fake = tk.Button(self, text="NEXT", font=controller.text_style_bold, state=tk.DISABLED,
-                                      fg='#FFFFFF',
+                                      fg='#FFFFFF', disabledforeground='#FFFFFF',
                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#9e04c4', highlightbackground='#9e04c4')
+                                      bg='#7c7c7d', highlightbackground='#7c7c7d')
             self.next_btn_fake.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
@@ -997,7 +1011,7 @@ class Finished(tk.Frame):
         elif sys.platform == "darwin":
             self.finish_pg04.place(x=682, y=265)
         else:
-            self.finish_pg04.place(x=682, y=265)
+            self.finish_pg04.place(x=718, y=268)
 
         if controller.operating_system != 'posix':
             self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
