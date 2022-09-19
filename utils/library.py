@@ -3,7 +3,6 @@ import base58
 import base64
 import codecs
 import hashlib
-import bip32utils
 from bip32 import BIP32
 from utils import segwit_address
 
