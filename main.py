@@ -8,7 +8,6 @@ from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from mnemonic import Mnemonic
-import bip32utils
 import click
 import requests
 from dotenv import load_dotenv
@@ -599,12 +598,9 @@ class SeedPhrase(tk.Frame):
             if mnemon.check(seed_phrase.get()):
                 seed = mnemon.to_seed(seed_phrase.get())
 
-                root_key = bip32utils.BIP32Key.fromEntropy(seed)
-                address = root_key.Address()
-                private_key = root_key.WalletImportFormat()
+                private_key = library.seed_to_wif(seed)
 
-                self.controller.shared_data["key_pairs"].append({'private_key': private_key, 'address': address})
-                click.echo(private_key)
+                self.controller.shared_data["key_pairs"].append({'private_key': private_key})
             else:
                 messagebox.showinfo("Error", f"Invalid seed phrase!")
                 return
@@ -724,15 +720,15 @@ class SubmitAirdrop(tk.Frame):
         self.step_title.place(x=270, y=40)
 
         self.submit_pg01 = tk.Label(self,
-                                        text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
-                                        font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=500, bg='#FFFFFF')
+                                    text="""When you are ready, press 'SIGN' to cryptographically sign each address with the specified substrate address to prove ownership.""",
+                                    font=controller.text_style, justify=tk.LEFT,
+                                    wraplength=500, bg='#FFFFFF')
         self.submit_pg01.place(x=270, y=100)
 
         self.submit_pg02 = tk.Label(self,
-                                        text="""This will sign new substrate address with each keypair provided.""",
-                                        font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=500, bg='#FFFFFF')
+                                    text="""This will sign new substrate address with each keypair provided.""",
+                                    font=controller.text_style, justify=tk.LEFT,
+                                    wraplength=500, bg='#FFFFFF')
         self.submit_pg02.place(x=270, y=190)
 
         self.c1 = tk.Checkbutton(self, text='I have read and accept Terms and Conditions',
@@ -864,16 +860,16 @@ class KYC(tk.Frame):
 
         if controller.operating_system != 'posix':
             self.kyc_btn = tk.Button(self, text="KYC Start", font=controller.text_style_bold, cursor="hand2",
-                                       fg='#FFFFFF', command=self.kyc_start,
-                                       height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                       highlightbackground='#9e04c4', bg='#9e04c4')
+                                     fg='#FFFFFF', command=self.kyc_start,
+                                     height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                     highlightbackground='#9e04c4', bg='#9e04c4')
             self.kyc_btn.place(x=270, y=160)
         else:
             self.kyc_btn = Button(self, text='KYC Start', font=controller.text_style_bold, cursor="hand2",
-                                    fg='#FFFFFF', command=self.kyc_start,
-                                    height=40, width=130, pady=4,
-                                    activebackground=('#9e04c4', '#9e04c4'),
-                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+                                  fg='#FFFFFF', command=self.kyc_start,
+                                  height=40, width=130, pady=4,
+                                  activebackground=('#9e04c4', '#9e04c4'),
+                                  activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.kyc_btn.place(x=270, y=160)
 
     def kyc_start(self):

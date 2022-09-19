@@ -3,6 +3,8 @@ import base58
 import base64
 import codecs
 import hashlib
+import bip32utils
+from bip32 import BIP32
 from utils import segwit_address
 
 
@@ -12,6 +14,18 @@ def compress_public_key(public_key):
     parity_flag = (b'\x03' if int(y.hex(), 16) & 1 else b'\x02')
     public_key_compressed = (parity_flag + x).hex()
     return public_key_compressed
+
+
+# used for mobile app seed
+def seed_to_wif(seed):
+    bip32 = BIP32.from_seed(seed)
+    derive_key = bip32.get_privkey_from_path("m/44'/222'/0'/0/0")
+
+    extended_key = b'\x80' + derive_key + b'\x01'
+    extended_checksum = extended_key + doublehash256(extended_key).digest()[0:4]
+    wif_private_key = base58.b58encode(extended_checksum).decode('utf-8')
+
+    return wif_private_key
 
 
 def hash160(hex_str):
