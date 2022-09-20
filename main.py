@@ -13,6 +13,7 @@ import requests
 from dotenv import load_dotenv
 import webbrowser
 import threading
+from itertools import count
 
 extDataDir = os.getcwd()
 if getattr(sys, 'frozen', False):
@@ -157,7 +158,8 @@ class AirdropApplication(tk.Tk):
             "substrate-addr": tk.StringVar(),
             "seed-phrase": tk.StringVar(),
             "tos-accepted": tk.BooleanVar(),
-            "user-ready": tk.BooleanVar()
+            "user-ready": tk.BooleanVar(),
+            "sign-processing": tk.BooleanVar()
         }
 
         self.operating_system = os.name
@@ -229,7 +231,7 @@ class StartPage(tk.Frame):
             self.start_btn.place(x=85, y=275)
 
             self.start_btn_fake = tk.Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
-                                            fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                            fg='#636363', disabledforeground='#636363',
                                             height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                             bg='#7c7c7d', highlightbackground='#7c7c7d')
             self.start_btn_fake.place(x=85, y=275)
@@ -243,10 +245,10 @@ class StartPage(tk.Frame):
             self.start_btn.place(x=85, y=275)
 
             self.start_btn_fake = Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
-                                         fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                         fg='#636363', disabledforeground='#636363',
                                          height=40, width=130, pady=4, border=0,
                                          activebackground='#7c7c7d',
-                                         activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
+                                         activeforeground='#636363', bg='#7c7c7d', borderless=True)
             self.start_btn_fake.place(x=85, y=275)
 
         self.startpage_pg01 = tk.Label(self, text="""This tool will guide you through the process of claiming the Bitgreen Airdrop. You will require the following:
@@ -260,11 +262,11 @@ class StartPage(tk.Frame):
 
         self.announcement01 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
                                        pady='0', padx='0',
-                                       fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                       fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.announcement01.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
-            self.announcement01.place(x=582, y=91)
+            self.announcement01.place(x=583, y=92)
         elif sys.platform == "darwin":
             self.announcement01.place(x=490, y=61)
         else:
@@ -277,7 +279,7 @@ class StartPage(tk.Frame):
         self.startpage_pg02.place(x=265, y=145)
 
         self.announcement02 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
-                                       fg='#850303', cursor="hand2", font=controller.text_style)
+                                       fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.announcement02.place(x=264, y=221)
         self.announcement02.bind("<Button-1>",
                                  lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
@@ -293,7 +295,7 @@ class StartPage(tk.Frame):
                                  highlightthickness=0, relief=tk.GROOVE)
         self.c1.place(x=250, y=300)
         self.terms_and_conditions = tk.Label(self, text="Terms and Conditions", bg='#FFFFFF',
-                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                             fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.terms_and_conditions.bind("<Button-1>",
                                        lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/tos"))
         if sys.platform == "linux":
@@ -310,7 +312,7 @@ class StartPage(tk.Frame):
                                  highlightthickness=0, relief=tk.GROOVE)
         self.c2.place(x=250, y=330)
         self.announcement = tk.Label(self, text="announcement", bg='#FFFFFF',
-                                     fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                     fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.announcement.bind("<Button-1>",
                                lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
@@ -329,19 +331,22 @@ class StartPage(tk.Frame):
         else:
             if self.controller.operating_system != 'posix':
                 if self.start_btn_fake.winfo_exists() == 0:
-                    self.start_btn_fake = tk.Button(self, text="START", font=self.controller.text_style_bold, state=tk.DISABLED,
-                                                    fg='#FFFFFF', disabledforeground='#FFFFFF',
+                    self.start_btn_fake = tk.Button(self, text="START", font=self.controller.text_style_bold,
+                                                    state=tk.DISABLED,
+                                                    fg='#636363', disabledforeground='#636363',
                                                     height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
                                                     bg='#7c7c7d', highlightbackground='#7c7c7d')
                 self.start_btn_fake.place(x=85, y=275)
             else:
                 if self.start_btn_fake.winfo_exists() == 0:
-                    self.start_btn_fake = Button(self, text="START", font=self.controller.text_style_bold, state=tk.DISABLED,
-                                                 fg='#FFFFFF', disabledforeground='#FFFFFF',
+                    self.start_btn_fake = Button(self, text="START", font=self.controller.text_style_bold,
+                                                 state=tk.DISABLED,
+                                                 fg='#636363', disabledforeground='#636363',
                                                  height=40, width=130, pady=4, border=0,
                                                  activebackground='#7c7c7d',
-                                                 activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
+                                                 activeforeground='#636363', bg='#7c7c7d', borderless=True)
                 self.start_btn_fake.place(x=85, y=275)
+
 
 def menu_items(self, controller, active_step):
     active_dot_img = Image.open(resourcePath('icons_Dot Current.jpg'))
@@ -623,14 +628,14 @@ class SeedPhrase(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-
         self.seed_pg01 = tk.Label(self,
                                   text="""If you did not have a mobile wallet click next to skip this step.""",
                                   font=controller.text_style, justify=tk.LEFT,
                                   wraplength=500, bg='#FFFFFF', fg='#E80000')
         self.seed_pg01.place(x=270, y=110)
 
-        self.seed_pg02 = tk.Label(self, text="Please enter your 12 word long seed phrase that you got when you created your mobile wallet.",
+        self.seed_pg02 = tk.Label(self,
+                                  text="Please enter your 12 word long seed phrase that you got when you created your mobile wallet.",
                                   font=controller.text_style, justify=tk.LEFT,
                                   wraplength=500, bg='#FFFFFF')
         self.seed_pg02.place(x=270, y=140)
@@ -721,7 +726,8 @@ class VerifyOwnership(tk.Frame):
         self.step_title.place(x=270, y=40)
         ######################################
 
-        self.verify_pg01 = tk.Label(self, text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step. This both proves that your substrate address 'owns' the Bitcoin Green addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
+        self.verify_pg01 = tk.Label(self,
+                                    text="""This step involves specifying the substrate address you created on the new blockchain. Each address associated in your wallet will be signed with the substrate address on the next step. This both proves that your substrate address 'owns' the Bitcoin Green addresses on the old blockchain, and in the submission to the airdrop will authorise the equivilent funds to be sent to your Substrate address on the new blockchain.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=520, bg='#FFFFFF')
         self.verify_pg01.place(x=270, y=110)
@@ -733,7 +739,7 @@ Airdrop announcement on how to create one.""",
         self.verify_pg02.place(x=270, y=246)
 
         self.verify_pg03 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
-                                    fg='#850303', cursor="hand2", font=controller.text_style)
+                                    fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.verify_pg03.bind("<Button-1>",
                               lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
@@ -789,7 +795,7 @@ Airdrop announcement on how to create one.""",
         message = self.controller.shared_data["substrate-addr"].get()
 
         if message == 'Substrate address' or message == '':
-            messagebox.showinfo("Error", "You must specify a valid substrate address.")
+            messagebox.showinfo("Error", "You must specify a valid substrate address (starts with \"5\").")
             return
 
         url = os.getenv('SERVER_API_URL') + '/validate-substrate-address'
@@ -798,7 +804,7 @@ Airdrop announcement on how to create one.""",
         if result['status']:
             self.controller.show_frame("SubmitAirdrop")
         else:
-            messagebox.showinfo("Error", "You must specify a valid substrate address.")
+            messagebox.showinfo("Error", "You must specify a valid substrate address (starts with \"5\").")
 
 
 class SubmitAirdrop(tk.Frame):
@@ -833,7 +839,7 @@ class SubmitAirdrop(tk.Frame):
 
         if controller.operating_system != 'posix':
             self.submit_btn = tk.Button(self, text="SIGN", font=controller.text_style_bold,
-                                        fg='#FFFFFF', command=self.submit2airdrop, cursor="hand2",
+                                        fg='#FFFFFF', command=lambda: threading.Thread(target=self.submit2airdrop).start(), cursor="hand2",
                                         width=14, pady=2, relief=tk.GROOVE, border=0,
                                         bg='#9e04c4', highlightbackground='#9e04c4')
             self.submit_btn.place(x=630, y=290)
@@ -857,7 +863,7 @@ class SubmitAirdrop(tk.Frame):
             self.back_btn.place(x=270, y=330)
         else:
             self.submit_btn = Button(self, text='SIGN', font=controller.text_style_bold,
-                                     fg='#FFFFFF', command=self.submit2airdrop,
+                                     fg='#FFFFFF', command=lambda: threading.Thread(target=self.submit2airdrop).start(),
                                      height=40, width=130, pady=4, cursor="hand2",
                                      activebackground=('#9e04c4', '#9e04c4'),
                                      activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
@@ -887,7 +893,17 @@ class SubmitAirdrop(tk.Frame):
     def submit2airdrop(self):
         message = self.controller.shared_data["substrate-addr"].get()
 
+        if self.controller.shared_data["sign-processing"].get():
+            return
+
+        self.controller.shared_data["sign-processing"].set(True)
+
+        self.loading_gif = ImageLabel(self, borderwidth=0)
+        self.loading_gif.load('loading.gif')
+        self.loading_gif.place(x=525, y=280)
+
         if message == 'Substrate address' or message == '':
+            self.loading_gif.unload()
             messagebox.showinfo("Error", "You must specify a substrate address")
             return
 
@@ -903,14 +919,35 @@ class SubmitAirdrop(tk.Frame):
         url = os.getenv('SERVER_API_URL') + '/claim-addresses'
         r = requests.post(url, json=output)
         result = r.json()
+
         if result['status']:
-            messagebox.showinfo("Information",
-                                f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
+            self.loading_gif.unload()
+            self.loading_gif.place_forget()
 
             self.next_btn_fake.place_forget()
+
+            if self.controller.operating_system != 'posix':
+                self.submit_btn_fake = tk.Button(self, text="SIGN", font=self.controller.text_style_bold,
+                                                 state=tk.DISABLED,
+                                                 fg='#636363', disabledforeground='#636363',
+                                                 height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                                 bg='#7c7c7d', highlightbackground='#7c7c7d')
+                self.submit_btn_fake.place(x=630, y=290)
+            else:
+                self.submit_btn_fake = Button(self, text='SIGN', font=self.controller.text_style_bold,
+                                              fg='#636363', disabledforeground='#636363',
+                                              height=40, width=130, pady=4, border=0,
+                                              activebackground='#7c7c7d', state=tk.DISABLED,
+                                              activeforeground='#636363', bg='#7c7c7d', borderless=True)
+                self.submit_btn_fake.place(x=630, y=290)
+
+            messagebox.showinfo("Information",
+                                f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
         else:
+            self.loading_gif.unload()
             messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
+        self.controller.shared_data["sign-processing"].set(False)
 
 class KYC(tk.Frame):
     def __init__(self, parent, controller):
@@ -930,7 +967,7 @@ class KYC(tk.Frame):
         self.step_title.place(x=270, y=40)
 
         self.finish_pg01 = tk.Label(self,
-                                    text=f"""To finish your registration you have to go through the external Know your Customer Process. Make sure that the Substrate address matches the one you previously entered in this tool""",
+                                    text=f"""To finish your registration you have to go through the external Know Your Customer process. Make sure that the Substrate address matches the one you previously entered in this tool""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.finish_pg01.place(x=270, y=90)
@@ -1014,7 +1051,7 @@ class Finished(tk.Frame):
         self.finish_pg03.place(x=270, y=250)
 
         self.finish_pg04 = tk.Label(self, text="here", bg='#FFFFFF',
-                                    fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                    fg='#1a0dab', cursor="hand2", font=controller.text_style)
         self.finish_pg04.bind("<Button-1>",
                               lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
         if sys.platform == "linux":
@@ -1026,10 +1063,11 @@ class Finished(tk.Frame):
 
         if controller.operating_system != 'posix':
             self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
-                                         fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                         fg='#FFFFFF',
+                                         command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                          height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
                                          highlightbackground='#9e04c4', bg='#9e04c4')
-            self.checker_btn.place(x=260, y=330)
+            self.checker_btn.place(x=270, y=330)
 
             self.close_btn = tk.Button(self, text="CLOSE", font=controller.text_style_bold, cursor="hand2",
                                        fg='#FFFFFF', command=lambda: controller.destroy(),
@@ -1038,11 +1076,12 @@ class Finished(tk.Frame):
             self.close_btn.place(x=600, y=330)
         else:
             self.checker_btn = Button(self, text='CHECK ADDRESS', font=controller.text_style_bold, cursor="hand2",
-                                      fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                      fg='#FFFFFF',
+                                      command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
                                       height=40, width=195, pady=4,
                                       activebackground=('#9e04c4', '#9e04c4'),
                                       activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
-            self.checker_btn.place(x=260, y=330)
+            self.checker_btn.place(x=270, y=330)
 
             self.close_btn = Button(self, text='CLOSE', font=controller.text_style_bold, cursor="hand2",
                                     fg='#FFFFFF', command=lambda: controller.destroy(),
@@ -1050,6 +1089,44 @@ class Finished(tk.Frame):
                                     activebackground=('#9e04c4', '#9e04c4'),
                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.close_btn.place(x=630, y=330)
+
+
+class ImageLabel(tk.Label):
+    """a label that displays images, and plays them if they are gifs"""
+
+    def load(self, im):
+        if isinstance(im, str):
+            im = Image.open(im)
+        self.loc = 0
+        self.frames = []
+
+        try:
+            for i in count(1):
+                self.frames.append(ImageTk.PhotoImage(im.copy()))
+                im.seek(i)
+        except EOFError:
+            pass
+
+        try:
+            self.delay = im.info['duration']
+        except:
+            self.delay = 100
+
+        if len(self.frames) == 1:
+            self.config(image=self.frames[0])
+        else:
+            self.next_frame()
+
+    def unload(self):
+        self.config(image="")
+        self.frames = None
+
+    def next_frame(self):
+        if self.frames:
+            self.loc += 1
+            self.loc %= len(self.frames)
+            self.config(image=self.frames[self.loc])
+            self.after(self.delay, self.next_frame)
 
 
 def on_closing():
