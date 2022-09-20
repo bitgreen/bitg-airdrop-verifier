@@ -44,10 +44,10 @@ When testing locally, move contents inside /img into the root folder of main.py 
 
 ### PyInstaller - building standalone application (Windows, Linux, Mac OS)
 Windows:  
-```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.ico;." --add-data ".env;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-airdrop-verifier --clean```  
+```pyinstaller --onefile main.py --add-data "img\*.jpg;." --add-data "img\*.gif;." --add-data "img\*.ico;." --add-data ".env;." --noconsole --icon=img\favicon.ico --add-data="coincurve\*.dll;coincurve/"  -n bitgreen-airdrop-verifier --clean```  
 
 Ubuntu:  
-```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data ".env:." --noconsole -n bitgreen-airdrop-verifier --clean --hidden-import='PIL._tkinter_finder'```
+```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.gif:." --add-data ".env:." --noconsole -n bitgreen-airdrop-verifier --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean --codesign-identity="IDENTITY"```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.gif:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean --codesign-identity="IDENTITY"```

@@ -899,7 +899,7 @@ class SubmitAirdrop(tk.Frame):
         self.controller.shared_data["sign-processing"].set(True)
 
         self.loading_gif = ImageLabel(self, borderwidth=0)
-        self.loading_gif.load('loading.gif')
+        self.loading_gif.load(resourcePath('loading.gif'))
         self.loading_gif.place(x=525, y=280)
 
         if message == 'Substrate address' or message == '':
