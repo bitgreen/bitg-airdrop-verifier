@@ -242,10 +242,10 @@ class StartPage(tk.Frame):
                                     activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.start_btn.place(x=85, y=275)
 
-            self.start_btn_fake = tk.Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
+            self.start_btn_fake = Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
                                             fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                            height=40, width=130, pady=4, relief=tk.GROOVE, border=0,
-                                            activebackground=('#7c7c7d', '#7c7c7d'),
+                                            height=40, width=130, pady=4, border=0,
+                                            activebackground='#7c7c7d',
                                             activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
             self.start_btn_fake.place(x=85, y=275)
 
