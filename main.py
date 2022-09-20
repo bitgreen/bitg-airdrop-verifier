@@ -328,19 +328,19 @@ class StartPage(tk.Frame):
             self.start_btn_fake.destroy()
         else:
             if self.controller.operating_system != 'posix':
-                if self.start_btn_fake.winfo_exists() is 0:
+                if self.start_btn_fake.winfo_exists() == 0:
                     self.start_btn_fake = tk.Button(self, text="START", font=self.controller.text_style_bold, state=tk.DISABLED,
-                                                fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                                height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                                bg='#7c7c7d', highlightbackground='#7c7c7d')
+                                                    fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                                    height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                                    bg='#7c7c7d', highlightbackground='#7c7c7d')
                 self.start_btn_fake.place(x=85, y=275)
             else:
-                if self.start_btn_fake.winfo_exists() is 0:
+                if self.start_btn_fake.winfo_exists() == 0:
                     self.start_btn_fake = Button(self, text="START", font=self.controller.text_style_bold, state=tk.DISABLED,
-                                             fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                             height=40, width=130, pady=4, border=0,
-                                             activebackground='#7c7c7d',
-                                             activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
+                                                 fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                                 height=40, width=130, pady=4, border=0,
+                                                 activebackground='#7c7c7d',
+                                                 activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
                 self.start_btn_fake.place(x=85, y=275)
 
 def menu_items(self, controller, active_step):
