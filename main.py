@@ -229,9 +229,9 @@ class StartPage(tk.Frame):
             self.start_btn.place(x=85, y=275)
 
             self.start_btn_fake = tk.Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
-                                           fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                           height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                           bg='#7c7c7d', highlightbackground='#7c7c7d')
+                                            fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                            height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                            bg='#7c7c7d', highlightbackground='#7c7c7d')
             self.start_btn_fake.place(x=85, y=275)
         else:
             # Start - POSIX
@@ -243,10 +243,10 @@ class StartPage(tk.Frame):
             self.start_btn.place(x=85, y=275)
 
             self.start_btn_fake = Button(self, text="START", font=controller.text_style_bold, state=tk.DISABLED,
-                                            fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                            height=40, width=130, pady=4, border=0,
-                                            activebackground='#7c7c7d',
-                                            activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
+                                         fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                         height=40, width=130, pady=4, border=0,
+                                         activebackground='#7c7c7d',
+                                         activeforeground='#FFFFFF', bg='#7c7c7d', borderless=True)
             self.start_btn_fake.place(x=85, y=275)
 
         self.startpage_pg01 = tk.Label(self, text="""This tool will guide you through the process of claiming the Bitgreen Airdrop. You will require the following:
@@ -310,9 +310,9 @@ class StartPage(tk.Frame):
                                  highlightthickness=0, relief=tk.GROOVE)
         self.c2.place(x=250, y=330)
         self.announcement = tk.Label(self, text="announcement", bg='#FFFFFF',
-                                             fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                     fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.announcement.bind("<Button-1>",
-                                       lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+                               lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
             self.announcement.place(x=624, y=329)
         elif sys.platform == "darwin":
@@ -614,9 +614,9 @@ class SeedPhrase(tk.Frame):
 
 
         self.seed_pg01 = tk.Label(self,
-                                        text="""If you did not have a mobile wallet click next to skip this step.""",
-                                        font=controller.text_style, justify=tk.LEFT,
-                                        wraplength=500, bg='#FFFFFF', fg='#E80000')
+                                  text="""If you did not have a mobile wallet click next to skip this step.""",
+                                  font=controller.text_style, justify=tk.LEFT,
+                                  wraplength=500, bg='#FFFFFF', fg='#E80000')
         self.seed_pg01.place(x=270, y=110)
 
         self.seed_pg02 = tk.Label(self, text="Please enter your 12 word long seed phrase that you got when you created your mobile wallet.",
@@ -722,9 +722,9 @@ Airdrop announcement on how to create one.""",
         self.verify_pg02.place(x=270, y=246)
 
         self.verify_pg03 = tk.Label(self, text="Airdrop Announcement", bg='#FFFFFF',
-                                       fg='#850303', cursor="hand2", font=controller.text_style)
+                                    fg='#850303', cursor="hand2", font=controller.text_style)
         self.verify_pg03.bind("<Button-1>",
-                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+                              lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
             self.verify_pg03.place(x=270, y=265)
         elif sys.platform == "darwin":
@@ -834,9 +834,9 @@ class SubmitAirdrop(tk.Frame):
             self.next_btn.place(x=630, y=330)
 
             self.next_btn_fake = tk.Button(self, text="NEXT", font=controller.text_style_bold, state=tk.DISABLED,
-                                      fg='#FFFFFF', disabledforeground='#FFFFFF',
-                                      height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
-                                      bg='#7c7c7d', highlightbackground='#7c7c7d')
+                                           fg='#FFFFFF', disabledforeground='#FFFFFF',
+                                           height=1, width=14, pady=4, relief=tk.GROOVE, border=0,
+                                           bg='#7c7c7d', highlightbackground='#7c7c7d')
             self.next_btn_fake.place(x=630, y=330)
 
             self.back_btn = tk.Button(self, text="BACK", font=controller.text_style_bold, cursor="hand2",
@@ -860,10 +860,10 @@ class SubmitAirdrop(tk.Frame):
             self.next_btn.place(x=630, y=330)
 
             self.next_btn_fake = Button(self, text='NEXT', font=controller.text_style_bold,
-                                   fg='#FFFFFF',
-                                   height=40, width=130, pady=4, state=tk.DISABLED,
-                                   activebackground=('#9e04c4', '#9e04c4'),
-                                   activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+                                        fg='#FFFFFF',
+                                        height=40, width=130, pady=4, state=tk.DISABLED,
+                                        activebackground=('#9e04c4', '#9e04c4'),
+                                        activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.next_btn_fake.place(x=630, y=330)
 
             self.back_btn = Button(self, text='BACK', font=controller.text_style_bold, cursor="hand2",
@@ -919,7 +919,7 @@ class KYC(tk.Frame):
         self.step_title.place(x=270, y=40)
 
         self.finish_pg01 = tk.Label(self,
-                                    text=f"""To finish application, please KYC yourself. Make sure to use same substrate address in the process.""",
+                                    text=f"""To finish your registration you have to go through the external Know your Customer Process. Make sure that the Substrate address matches the one you previously entered in this tool""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.finish_pg01.place(x=270, y=90)
@@ -1003,9 +1003,9 @@ class Finished(tk.Frame):
         self.finish_pg03.place(x=270, y=250)
 
         self.finish_pg04 = tk.Label(self, text="here", bg='#FFFFFF',
-                                       fg='#9e04c4', cursor="hand2", font=controller.text_style)
+                                    fg='#9e04c4', cursor="hand2", font=controller.text_style)
         self.finish_pg04.bind("<Button-1>",
-                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
+                              lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/explorer"))
         if sys.platform == "linux":
             self.finish_pg04.place(x=596, y=288)
         elif sys.platform == "darwin":
@@ -1015,9 +1015,9 @@ class Finished(tk.Frame):
 
         if controller.operating_system != 'posix':
             self.checker_btn = tk.Button(self, text="CHECK ADDRESS", font=controller.text_style_bold, cursor="hand2",
-                                       fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
-                                       height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
-                                       highlightbackground='#9e04c4', bg='#9e04c4')
+                                         fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                         height=1, width=21, pady=4, relief=tk.GROOVE, border=0,
+                                         highlightbackground='#9e04c4', bg='#9e04c4')
             self.checker_btn.place(x=260, y=330)
 
             self.close_btn = tk.Button(self, text="CLOSE", font=controller.text_style_bold, cursor="hand2",
@@ -1027,10 +1027,10 @@ class Finished(tk.Frame):
             self.close_btn.place(x=600, y=330)
         else:
             self.checker_btn = Button(self, text='CHECK ADDRESS', font=controller.text_style_bold, cursor="hand2",
-                                    fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
-                                    height=40, width=195, pady=4,
-                                    activebackground=('#9e04c4', '#9e04c4'),
-                                    activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
+                                      fg='#FFFFFF', command=lambda: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/checker"),
+                                      height=40, width=195, pady=4,
+                                      activebackground=('#9e04c4', '#9e04c4'),
+                                      activeforeground='#FFFFFF', bg='#9e04c4', borderless=True)
             self.checker_btn.place(x=260, y=330)
 
             self.close_btn = Button(self, text='CLOSE', font=controller.text_style_bold, cursor="hand2",
