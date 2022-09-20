@@ -322,6 +322,23 @@ class StartPage(tk.Frame):
         else:
             self.announcement.place(x=524, y=329)
 
+
+        self.startpage_pg03 = tk.Label(self, text="If you need help using this airdrop tool, please click here for the support video.",
+                                       font=controller.text_style, justify=tk.LEFT,
+                                       wraplength=820, bg='#FFFFFF')
+        self.startpage_pg03.place(x=150, y=365)
+
+        self.support_video = tk.Label(self, text="click here", bg='#FFFFFF',
+                                      fg='#1a0dab', cursor="hand2", font=controller.text_style)
+        self.support_video.bind("<Button-1>",
+                                lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/video"))
+        if sys.platform == "linux":
+            self.support_video.place(x=522, y=365)
+        elif sys.platform == "darwin":
+            self.support_video.place(x=416, y=365)
+        else:
+            self.support_video.place(x=428, y=365)
+
     def agree_tos(self):
         accepted = self.controller.shared_data["tos-accepted"].get()
         ready = self.controller.shared_data["user-ready"].get()
