@@ -323,7 +323,7 @@ class StartPage(tk.Frame):
             self.announcement.place(x=524, y=329)
 
 
-        self.startpage_pg03 = tk.Label(self, text="If you need help using this airdrop tool, please click here for the support video.",
+        self.startpage_pg03 = tk.Label(self, text="If you need help using this airdrop tool, please click here  for the support video.",
                                        font=controller.text_style, justify=tk.LEFT,
                                        wraplength=820, bg='#FFFFFF')
         self.startpage_pg03.place(x=150, y=365)
@@ -333,9 +333,9 @@ class StartPage(tk.Frame):
         self.support_video.bind("<Button-1>",
                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/video"))
         if sys.platform == "linux":
-            self.support_video.place(x=522, y=365)
+            self.support_video.place(x=524, y=365)
         elif sys.platform == "darwin":
-            self.support_video.place(x=416, y=365)
+            self.support_video.place(x=417, y=365)
         else:
             self.support_video.place(x=428, y=365)
 
@@ -652,7 +652,7 @@ class SeedPhrase(tk.Frame):
         self.seed_pg01.place(x=270, y=110)
 
         self.seed_pg02 = tk.Label(self,
-                                  text="Please enter your 12 word long seed phrase that you got when you created your mobile wallet.",
+                                  text="Please enter your 12 word seed phrase that you got when you created your mobile wallet.",
                                   font=controller.text_style, justify=tk.LEFT,
                                   wraplength=500, bg='#FFFFFF')
         self.seed_pg02.place(x=270, y=140)
@@ -849,7 +849,7 @@ class SubmitAirdrop(tk.Frame):
         self.submit_pg01.place(x=270, y=100)
 
         self.submit_pg02 = tk.Label(self,
-                                    text="""After clicking submit all found addresses will be checked even ones you never used. This process can take a while and the app might be unresponsive in the meantime.""",
+                                    text="""After clicking submit all found addresses will be checked even ones you never used. This process can take up to 5 minutes and the app might be unresponsive in the meantime.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.submit_pg02.place(x=270, y=190)
@@ -1047,7 +1047,7 @@ class Finished(tk.Frame):
         self.step_title.place(x=270, y=40)
 
         self.finish_pg01 = tk.Label(self,
-                                    text=f"""Congratulations, you have successfully signed your Bitcoin Green address(s) with your specified substrate address.""",
+                                    text=f"""Congratulations, you have successfully signed your Bitcoin Green address(es) with your specified substrate address.""",
                                     font=controller.text_style, justify=tk.LEFT,
                                     wraplength=500, bg='#FFFFFF')
         self.finish_pg01.place(x=270, y=80)
@@ -1074,7 +1074,7 @@ class Finished(tk.Frame):
         if sys.platform == "linux":
             self.finish_pg04.place(x=596, y=288)
         elif sys.platform == "darwin":
-            self.finish_pg04.place(x=682, y=265)
+            self.finish_pg04.place(x=684, y=265)
         else:
             self.finish_pg04.place(x=718, y=268)
 
