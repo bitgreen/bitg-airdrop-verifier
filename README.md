@@ -4,16 +4,21 @@
 ### Checking application authenticity
 Always check the authenticity of any application you are downloading over the internet. By utilizing the following commands, you are ensuring the application you have downloaded hasn't been modified/tampered and should match the values below.
 
-**Windows:** `certutil -hashfile bitgreen-airdrop-verifier-WINx64.exe`
+**Windows:** `certutil -hashfile bitgreen-airdrop-verifier-windows.zip`
 ```
-SHA1 hash of bitgreen-airdrop-verifier.exe:
-e92bf3f7334a17cb37b7c0e07a30c573ee7d1e7e
+SHA1 hash of bitgreen-airdrop-verifier-windows.zip:
+d82e8862157ca07b9866bdf610349d3766d3ad53
 CertUtil: -hashfile command completed successfully.
 ```
 
-**Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier`
+**Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier-macos.zip`
 ```
-d6845367e8179ee67af95ac6f8872af1dc35ccb3  bitgreen-airdrop-verifier-MacOSX.zip
+52f9cebf40e8ba264a0becf3652053d8558e13b6 bitgreen-airdrop-verifier-macos.zip
+```
+
+**Linux:** `sha1sum bitgreen-airdrop-verifier-linux.zip`
+```
+dd807d6649ce0ba030f67dbcf878113c6de545a2 bitgreen-airdrop-verifier-linux.zip
 ```
 
 ---
