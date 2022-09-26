@@ -331,29 +331,29 @@ class StartPage(tk.Frame):
         elif sys.platform == "darwin":
             self.startpage_pg03.place(x=205, y=365)
         else:
-            self.startpage_pg03.place(x=85, y=365)
+            self.startpage_pg03.place(x=185, y=365)
 
         self.support_video = tk.Label(self, text="VIDEO TUTORIAL", bg='#FFFFFF',
                                       fg='#1a0dab', cursor="hand2", font=controller.text_style_bold)
         self.support_video.bind("<Button-1>",
                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/video"))
         if sys.platform == "linux":
-            self.support_video.place(x=289, y=365)
+            self.support_video.place(x=295, y=365)
         elif sys.platform == "darwin":
             self.support_video.place(x=344, y=365)
         else:
-            self.support_video.place(x=289, y=365)
+            self.support_video.place(x=345, y=365)
 
         self.wiki_page = tk.Label(self, text="WIKI PAGE", bg='#FFFFFF',
                                   fg='#1a0dab', cursor="hand2", font=controller.text_style_bold)
         self.wiki_page.bind("<Button-1>",
                             lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
         if sys.platform == "linux":
-            self.wiki_page.place(x=612, y=365)
+            self.wiki_page.place(x=630, y=365)
         elif sys.platform == "darwin":
             self.wiki_page.place(x=568, y=365)
         else:
-            self.wiki_page.place(x=612, y=365)
+            self.wiki_page.place(x=600, y=365)
 
     def agree_tos(self):
         accepted = self.controller.shared_data["tos-accepted"].get()
