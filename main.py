@@ -286,7 +286,7 @@ class StartPage(tk.Frame):
 
         self.before_you_begin = tk.Label(self, text="Before you begin", fg='#9e04c4', bg='#FFFFFF',
                                          font=controller.title_font)
-        self.before_you_begin.place(x=265, y=250)
+        self.before_you_begin.place(x=255, y=250)
 
         self.c1 = tk.Checkbutton(self, text='I acknowledge Bitgreen Airdrop Standard Terms and Conditions.',
                                  variable=controller.shared_data["tos-accepted"], command=self.agree_tos,
@@ -323,21 +323,32 @@ class StartPage(tk.Frame):
             self.announcement.place(x=524, y=329)
 
 
-        self.startpage_pg03 = tk.Label(self, text="If you need help using this airdrop tool, please click here  for the support video.",
-                                       font=controller.text_style, justify=tk.LEFT,
+        self.startpage_pg03 = tk.Label(self, text="Need help? Watch our VIDEO TUTORIAL and check out our WIKI PAGE",
+                                       font=controller.text_style_bold, justify=tk.LEFT,
                                        wraplength=820, bg='#FFFFFF')
-        self.startpage_pg03.place(x=150, y=365)
+        self.startpage_pg03.place(x=85, y=365)
 
-        self.support_video = tk.Label(self, text="click here", bg='#FFFFFF',
-                                      fg='#1a0dab', cursor="hand2", font=controller.text_style)
+        self.support_video = tk.Label(self, text="VIDEO TUTORIAL", bg='#FFFFFF',
+                                      fg='#1a0dab', cursor="hand2", font=controller.text_style_bold)
         self.support_video.bind("<Button-1>",
                                 lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/video"))
         if sys.platform == "linux":
-            self.support_video.place(x=524, y=365)
+            self.support_video.place(x=289, y=365)
         elif sys.platform == "darwin":
-            self.support_video.place(x=417, y=365)
+            self.support_video.place(x=289, y=365)
         else:
-            self.support_video.place(x=428, y=365)
+            self.support_video.place(x=289, y=365)
+
+        self.wiki_page = tk.Label(self, text="WIKI PAGE", bg='#FFFFFF',
+                                  fg='#1a0dab', cursor="hand2", font=controller.text_style_bold)
+        self.wiki_page.bind("<Button-1>",
+                            lambda e: webbrowser.open_new(os.getenv('SERVER_API_URL') + "/ann"))
+        if sys.platform == "linux":
+            self.wiki_page.place(x=612, y=365)
+        elif sys.platform == "darwin":
+            self.wiki_page.place(x=612, y=365)
+        else:
+            self.wiki_page.place(x=612, y=365)
 
     def agree_tos(self):
         accepted = self.controller.shared_data["tos-accepted"].get()
