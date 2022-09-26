@@ -323,10 +323,15 @@ class StartPage(tk.Frame):
             self.announcement.place(x=524, y=329)
 
 
-        self.startpage_pg03 = tk.Label(self, text="Need help? Watch our VIDEO TUTORIAL and check out our WIKI PAGE",
+        self.startpage_pg03 = tk.Label(self, text="Need help? Watch our  VIDEO TUTORIAL  and check out our  WIKI PAGE",
                                        font=controller.text_style_bold, justify=tk.LEFT,
                                        wraplength=820, bg='#FFFFFF')
-        self.startpage_pg03.place(x=85, y=365)
+        if sys.platform == "linux":
+            self.startpage_pg03.place(x=85, y=365)
+        elif sys.platform == "darwin":
+            self.startpage_pg03.place(x=205, y=365)
+        else:
+            self.startpage_pg03.place(x=85, y=365)
 
         self.support_video = tk.Label(self, text="VIDEO TUTORIAL", bg='#FFFFFF',
                                       fg='#1a0dab', cursor="hand2", font=controller.text_style_bold)
@@ -335,7 +340,7 @@ class StartPage(tk.Frame):
         if sys.platform == "linux":
             self.support_video.place(x=289, y=365)
         elif sys.platform == "darwin":
-            self.support_video.place(x=289, y=365)
+            self.support_video.place(x=344, y=365)
         else:
             self.support_video.place(x=289, y=365)
 
@@ -346,7 +351,7 @@ class StartPage(tk.Frame):
         if sys.platform == "linux":
             self.wiki_page.place(x=612, y=365)
         elif sys.platform == "darwin":
-            self.wiki_page.place(x=612, y=365)
+            self.wiki_page.place(x=568, y=365)
         else:
             self.wiki_page.place(x=612, y=365)
 
