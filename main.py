@@ -924,18 +924,25 @@ class SubmitAirdrop(tk.Frame):
             messagebox.showinfo("Error", "You must specify a substrate address")
             return
 
-        output = {
-            'old_addresses': [],
-            'substrate_address': message
-        }
+        output = {'old_addresses': [], 'substrate_address': message, 'api_secret': os.getenv('SERVER_API_KEY')}
 
+        i = 0
+        total_signed = 0
+        result = None
         for keypair in self.controller.shared_data["key_pairs"]:
             output['old_addresses'].append(library.sign_message(keypair['private_key'], message))
+            i = i + 1
+            if i >= 1000:
+                # every 1k, send request
+                result = self.claim_addresses(output)
+                total_signed = total_signed + result['signed_addresses_count']
+                i = 0
+                output['old_addresses'] = []
 
-        output['api_secret'] = os.getenv('SERVER_API_KEY')
-        url = os.getenv('SERVER_API_URL') + '/claim-addresses'
-        r = requests.post(url, json=output)
-        result = r.json()
+        #  take care of the rest (if any)
+        if i > 0:
+            result = self.claim_addresses(output)
+            total_signed = total_signed + result['signed_addresses_count']
 
         if result['status']:
             self.loading_gif.unload()
@@ -959,12 +966,20 @@ class SubmitAirdrop(tk.Frame):
                 self.submit_btn_fake.place(x=630, y=290)
 
             messagebox.showinfo("Information",
-                                f"Successfully signed {result['signed_addresses_count']} addresses. Click Next to continue.")
+                                f"Successfully signed {total_signed} addresses. Click Next to continue.")
         else:
             self.loading_gif.unload()
             messagebox.showinfo("Error", f"Something went wrong. Please contact us.")
 
         self.controller.shared_data["sign-processing"].set(False)
+
+    def claim_addresses(self, output):
+        url = os.getenv('SERVER_API_URL') + '/claim-addresses'
+        r = requests.post(url, json=output)
+        result = r.json()
+
+        return result
+
 
 class KYC(tk.Frame):
     def __init__(self, parent, controller):
