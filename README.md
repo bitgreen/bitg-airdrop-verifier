@@ -7,18 +7,18 @@ Always check the authenticity of any application you are downloading over the in
 **Windows:** `certutil -hashfile bitgreen-airdrop-verifier-windows.zip`
 ```
 SHA1 hash of bitgreen-airdrop-verifier-windows.zip:
-d82e8862157ca07b9866bdf610349d3766d3ad53
+e9218386619ae1bd3bdde8348abbe4c830721c26
 CertUtil: -hashfile command completed successfully.
 ```
 
 **Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier-macos.zip`
 ```
-52f9cebf40e8ba264a0becf3652053d8558e13b6 bitgreen-airdrop-verifier-macos.zip
+084c456787bbc76cfdefc1bc2e3abdea35fb7fca bitgreen-airdrop-verifier-macos.zip
 ```
 
 **Linux:** `sha1sum bitgreen-airdrop-verifier-linux.zip`
 ```
-dd807d6649ce0ba030f67dbcf878113c6de545a2 bitgreen-airdrop-verifier-linux.zip
+19da7a067651b67e12871b9d67a18168f1445b95 bitgreen-airdrop-verifier-linux.zip
 ```
 
 ---
@@ -55,4 +55,4 @@ Ubuntu:
 ```pyinstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.gif:." --add-data ".env:." --noconsole -n bitgreen-airdrop-verifier --clean --hidden-import='PIL._tkinter_finder'```
 
 Mac OS:  
-```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.gif:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean --codesign-identity="IDENTITY"```
+```python3 -m PyInstaller --onefile main.py --add-data "img/*.jpg:." --add-data "img/*.gif:." --add-data "img/*.ico:." --add-data ".env:." --noconsole --icon=img/favicon.ico -n bitgreen-airdrop-verifier --clean --osx-entitlements-file entitlements.plist --codesign-identity="IDENTITY"```
