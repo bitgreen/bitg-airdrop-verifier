@@ -7,18 +7,18 @@ Always check the authenticity of any application you are downloading over the in
 **Windows:** `certutil -hashfile bitgreen-airdrop-verifier-windows.zip`
 ```
 SHA1 hash of bitgreen-airdrop-verifier-windows.zip:
-e9218386619ae1bd3bdde8348abbe4c830721c26
+106f02c86b735f4963e60cc0a5e19e65c0c0cb78
 CertUtil: -hashfile command completed successfully.
 ```
 
 **Mac OS:** `shasum -a 1 bitgreen-airdrop-verifier-macos.zip`
 ```
-084c456787bbc76cfdefc1bc2e3abdea35fb7fca bitgreen-airdrop-verifier-macos.zip
+4d87a3d5feb3ba2efa9b5d428aebc3bb692be9c0 bitgreen-airdrop-verifier-macos.zip
 ```
 
 **Linux:** `sha1sum bitgreen-airdrop-verifier-linux.zip`
 ```
-19da7a067651b67e12871b9d67a18168f1445b95 bitgreen-airdrop-verifier-linux.zip
+2a419aac9d4880ba4e4414fb92834849fc1be225 bitgreen-airdrop-verifier-linux.zip
 ```
 
 ---
